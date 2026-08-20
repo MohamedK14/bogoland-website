@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "nameFr": "Robe Bogolan — Ébène",
+    "nameEn": "Bogolan Dress — Ebony",
+    "category": "Robes",
+    "price": 22000,
+    "image": "https://picsum.photos/500/650?random=1",
+    "hoverImage": "https://picsum.photos/500/650?random=2",
+    "inStock": true
+  },
+  {
+    "id": 2,
+    "nameFr": "Voile Soie — Terracotta",
+    "nameEn": "Silk Veil — Terracotta",
+    "category": "Voiles",
+    "price": 9500,
+    "image": "https://picsum.photos/500/650?random=3",
+    "hoverImage": "https://picsum.photos/500/650?random=4",
+    "inStock": true
+  },
+  {
+    "id": 3,
+    "nameFr": "Ensemble Pagne — Royal",
+    "nameEn": "Pagne Set — Royal",
+    "category": "Ensembles",
+    "price": 28000,
+    "image": "https://picsum.photos/500/650?random=5",
+    "hoverImage": "https://picsum.photos/500/650?random=6",
+    "inStock": true
+  },
+  {
+    "id": 4,
+    "nameFr": "Pants Pagne — Indigo",
+    "nameEn": "Pagne Pants — Indigo",
+    "category": "Pants Pagne",
+    "price": 16000,
+    "image": "https://picsum.photos/500/650?random=7",
+    "hoverImage": "https://picsum.photos/500/650?random=8",
+    "inStock": true
+  }
+]
