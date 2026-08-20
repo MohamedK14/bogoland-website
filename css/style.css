@@ -42,9 +42,10 @@ img{max-width:100%; display:block;}
 
 header{ padding:26px 0; border-bottom:1px solid var(--line); background:var(--ivory); position:sticky; top:0; z-index:50; }
 .header-inner{ display:flex; align-items:center; justify-content:space-between; }
-.logo{ font-size:26px; letter-spacing:0.03em; }
+.logo{ font-size:26px; letter-spacing:0.03em; display:flex; align-items:center; gap:14px; }
 .logo .dot{ color:var(--clay); }
 .logo-img{ height:36px; width:auto; display:block; border-radius:2px; }
+.logo-text{ font-family:'Jost', sans-serif; }
 nav ul{ list-style:none; display:flex; gap:34px; }
 nav a{ font-size:13px; letter-spacing:0.05em; text-transform:uppercase; position:relative; padding-bottom:4px; }
 nav a::after{ content:""; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--clay); transition:width .25s; }
