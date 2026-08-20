@@ -19,6 +19,56 @@ function toggleMenu(){
   document.querySelector('nav').classList.toggle('open');
 }
 
+// --- CART (localStorage, no login/backend needed) ---
+// Stored as an array of {id, qty}. Per-browser/device only — see
+// bogoland-v4-plan memory: this is the frontend half of that plan.
+const CART_KEY = 'bogoland_cart';
+
+function getCart(){
+  try {
+    const cart = JSON.parse(localStorage.getItem(CART_KEY));
+    return Array.isArray(cart) ? cart : [];
+  } catch(e){
+    return [];
+  }
+}
+
+function saveCart(cart){
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  updateCartBadge();
+}
+
+function addToCart(productId, qty){
+  const cart = getCart();
+  const existing = cart.find(item => item.id === productId);
+  if(existing){ existing.qty += qty; }
+  else{ cart.push({ id: productId, qty }); }
+  saveCart(cart);
+}
+
+function removeFromCart(productId){
+  saveCart(getCart().filter(item => item.id !== productId));
+}
+
+function updateCartItemQty(productId, qty){
+  if(qty <= 0){ return removeFromCart(productId); }
+  const cart = getCart();
+  const item = cart.find(i => i.id === productId);
+  if(item){ item.qty = qty; saveCart(cart); }
+}
+
+function getCartCount(){
+  return getCart().reduce((sum, item) => sum + item.qty, 0);
+}
+
+function updateCartBadge(){
+  const badge = document.getElementById('cart-badge');
+  if(!badge) return;
+  const count = getCartCount();
+  badge.textContent = count;
+  badge.style.display = count > 0 ? 'flex' : 'none';
+}
+
 function getQueryParam(name){
   return new URLSearchParams(window.location.search).get(name);
 }
@@ -141,8 +191,8 @@ function renderProductDetail(){
             <button id="cart-btn" class="cart-btn" type="button">
               <span class="fr">Ajouter au panier</span><span class="en" style="display:none;">Add to cart</span>
             </button>
-            <p id="cart-note" class="cart-note fr" style="display:none;">Ajouté (aperçu — panier pas encore connecté).</p>
-            <p id="cart-note-en" class="cart-note en" style="display:none;">Added (preview — cart not connected yet).</p>
+            <p id="cart-note" class="cart-note fr" style="display:none;">Ajouté au panier.</p>
+            <p id="cart-note-en" class="cart-note en" style="display:none;">Added to cart.</p>
           </div>
         </div>
       `;
@@ -168,10 +218,10 @@ function renderProductDetail(){
       qtyInput.addEventListener('input', updateWhatsAppLink);
       document.querySelectorAll('.lang-toggle button').forEach(b => b.addEventListener('click', updateWhatsAppLink));
 
-      // "Add to cart" is a visual-only preview for now — see bogoland-v3-plan
-      // memory: real localStorage persistence is a deliberately later step.
       const cartBtn = document.getElementById('cart-btn');
       cartBtn.addEventListener('click', () => {
+        const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+        addToCart(product.id, qty);
         document.getElementById('cart-note').style.display = document.documentElement.getAttribute('data-lang') === 'fr' ? 'block' : 'none';
         document.getElementById('cart-note-en').style.display = document.documentElement.getAttribute('data-lang') === 'en' ? 'block' : 'none';
       });
@@ -200,7 +250,100 @@ function renderSimilarProducts(allProducts, current){
   section.querySelector('.products-grid').innerHTML = similar.map(productCardHTML).join('');
 }
 
+function cartItemHTML(product, qty){
+  const lang = document.documentElement.getAttribute('data-lang') || 'fr';
+  const name = lang === 'en' ? product.nameEn : product.nameFr;
+  return `
+    <div class="cart-item" data-id="${product.id}">
+      <img src="${product.image}" alt="${name}">
+      <div class="cart-item-info">
+        <h4 class="fr">${product.nameFr}</h4><h4 class="en" style="display:none;">${product.nameEn}</h4>
+        <p class="price">${formatPrice(product.price)}</p>
+        <div class="cart-item-qty">
+          <button type="button" class="qty-btn" data-action="decrease">−</button>
+          <span class="qty-value">${qty}</span>
+          <button type="button" class="qty-btn" data-action="increase">+</button>
+        </div>
+      </div>
+      <button type="button" class="cart-remove" aria-label="Remove">✕</button>
+    </div>
+  `;
+}
+
+// Renders the cart page (#cart-container), if present — only cart.html has one.
+function renderCart(){
+  const container = document.getElementById('cart-container');
+  if(!container) return;
+
+  const cart = getCart();
+  if(cart.length === 0){
+    container.innerHTML = `
+      <p class="cart-empty fr">Votre panier est vide.</p>
+      <p class="cart-empty en" style="display:none;">Your cart is empty.</p>
+      <a href="index.html" class="btn-outline fr" style="display:inline-block; margin-top:20px;">Continuer mes achats</a>
+      <a href="index.html" class="btn-outline en" style="display:none; margin-top:20px;">Continue shopping</a>
+    `;
+    return;
+  }
+
+  fetch('products.json')
+    .then(res => res.json())
+    .then(products => {
+      const items = cart
+        .map(entry => ({ product: products.find(p => p.id === entry.id), qty: entry.qty }))
+        .filter(entry => entry.product);
+
+      const total = items.reduce((sum, { product, qty }) => sum + product.price * qty, 0);
+
+      container.innerHTML = `
+        <div class="cart-items">
+          ${items.map(({ product, qty }) => cartItemHTML(product, qty)).join('')}
+        </div>
+        <div class="cart-summary">
+          <p class="cart-total fr">Total : ${formatPrice(total)}</p>
+          <p class="cart-total en" style="display:none;">Total: ${formatPrice(total)}</p>
+          <a id="cart-whatsapp-btn" class="whatsapp-btn" target="_blank" rel="noopener">
+            <span class="fr">Commander sur WhatsApp</span><span class="en" style="display:none;">Order on WhatsApp</span>
+          </a>
+        </div>
+      `;
+
+      const updateWhatsAppCartLink = () => {
+        const currentLang = document.documentElement.getAttribute('data-lang') || 'fr';
+        const lines = items.map(({ product, qty }) => {
+          const name = currentLang === 'en' ? product.nameEn : product.nameFr;
+          return `${name} x${qty} — ${formatPrice(product.price * qty)}`;
+        });
+        const message = currentLang === 'en'
+          ? `Hello, I would like to order:\n${lines.join('\n')}\nTotal: ${formatPrice(total)}`
+          : `Bonjour, je souhaite commander :\n${lines.join('\n')}\nTotal : ${formatPrice(total)}`;
+        document.getElementById('cart-whatsapp-btn').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      };
+      updateWhatsAppCartLink();
+      document.querySelectorAll('.lang-toggle button').forEach(b => b.addEventListener('click', updateWhatsAppCartLink));
+
+      container.querySelectorAll('.cart-item').forEach(el => {
+        const id = Number(el.dataset.id);
+        const entry = items.find(i => i.product.id === id);
+        el.querySelector('[data-action="increase"]').addEventListener('click', () => {
+          updateCartItemQty(id, entry.qty + 1);
+          renderCart();
+        });
+        el.querySelector('[data-action="decrease"]').addEventListener('click', () => {
+          updateCartItemQty(id, entry.qty - 1);
+          renderCart();
+        });
+        el.querySelector('.cart-remove').addEventListener('click', () => {
+          removeFromCart(id);
+          renderCart();
+        });
+      });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderProducts();
   renderProductDetail();
+  renderCart();
+  updateCartBadge();
 });
