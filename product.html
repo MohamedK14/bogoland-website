@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr" data-lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOGOLAND — Produit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="logo">BOGOLAND<span class="dot">.</span></div>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="fr">Accueil</a><a href="index.html" class="en">Home</a></li>
+        <li><a href="#" class="fr">Robes</a><a href="#" class="en">Dresses</a></li>
+        <li><a href="#" class="fr">Ensembles</a><a href="#" class="en">Sets</a></li>
+        <li><a href="#" class="fr">Voiles</a><a href="#" class="en">Veils</a></li>
+        <li><a href="#" class="fr">Pants Pagne</a><a href="#" class="en">Pants Pagne</a></li>
+        <li><a href="contact.html" class="fr">Contact</a><a href="contact.html" class="en">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-icons">
+      <div class="lang-toggle">
+        <button class="active" onclick="setLang('fr',this)">FR</button>
+        <button onclick="setLang('en',this)">EN</button>
+      </div>
+      <span>🔍</span><span>👤</span><span>🛍️</span>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="pattern-strip"></div>
+
+<section class="product-detail wrap" id="product-detail">
+  <!-- Rendered at runtime by renderProductDetail() in js/main.js, from products.json -->
+</section>
+
+<section class="section wrap" id="similar-products">
+  <div class="section-head">
+    <span class="story-label fr">Vous aimerez aussi</span><span class="story-label en" style="display:none;">You may also like</span>
+    <h2 class="fr">Produits similaires</h2><h2 class="en" style="display:none;">Similar products</h2>
+  </div>
+  <div class="products-grid">
+    <!-- Rendered at runtime by renderSimilarProducts() in js/main.js -->
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <div class="logo">BOGOLAND<span class="dot">.</span></div>
+      <p class="fr">Quand le bogolan rencontre l'élégance, la pudeur devient une signature.</p>
+      <p class="en" style="display:none;">When bogolan meets elegance, modesty becomes a signature.</p>
+    </div>
+    <div>
+      <h5 class="fr">Liens rapides</h5><h5 class="en" style="display:none;">Quick links</h5>
+      <ul>
+        <li class="fr">Accueil</li><li class="en" style="display:none;">Home</li>
+        <li class="fr">Boutique</li><li class="en" style="display:none;">Shop</li>
+        <li class="fr">Notre Histoire</li><li class="en" style="display:none;">Our Story</li>
+        <li class="fr">Contact</li><li class="en" style="display:none;">Contact</li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="fr">Besoin d'aide ?</h5><h5 class="en" style="display:none;">Need help?</h5>
+      <ul>
+        <li class="fr">FAQ</li><li class="en" style="display:none;">FAQ</li>
+        <li class="fr">Livraison</li><li class="en" style="display:none;">Shipping</li>
+        <li class="fr">Retours &amp; Remboursements</li><li class="en" style="display:none;">Returns &amp; Refunds</li>
+        <li class="fr">Guide des tailles</li><li class="en" style="display:none;">Size Guide</li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="fr">Restons connectés</h5><h5 class="en" style="display:none;">Stay connected</h5>
+      <p class="fr" style="font-size:13px; color:rgba(247,241,230,0.7); margin-bottom:14px;">Inscris-toi pour recevoir nos nouveautés et offres exclusives.</p>
+      <p class="en" style="display:none; font-size:13px; color:rgba(247,241,230,0.7); margin-bottom:14px;">Sign up for new arrivals and exclusive offers.</p>
+      <form class="newsletter-form" onsubmit="return false;">
+        <input type="email" placeholder="Votre adresse e-mail">
+        <button type="submit">→</button>
+      </form>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="fr">© 2027 Bogoland — Tous droits réservés</span>
+    <span class="en" style="display:none;">© 2027 Bogoland — All rights reserved</span>
+  </div>
+  <svg class="footer-pattern" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="40" r="14" fill="none" stroke="#F7F1E6" stroke-width="2"/>
+    <circle cx="90" cy="70" r="10" fill="none" stroke="#F7F1E6" stroke-width="2"/>
+    <path d="M20,120 L60,90 L100,120 L140,90 L180,120" fill="none" stroke="#F7F1E6" stroke-width="2"/>
+    <path d="M20,160 L60,130 L100,160 L140,130 L180,160" fill="none" stroke="#F7F1E6" stroke-width="2"/>
+  </svg>
+</footer>
+
+<script src="js/main.js"></script>
+
+</body>
+</html>

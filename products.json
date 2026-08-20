@@ -7,6 +7,15 @@
     "price": 22000,
     "image": "https://picsum.photos/500/650?random=1",
     "hoverImage": "https://picsum.photos/500/650?random=2",
+    "images": [
+      "https://picsum.photos/700/900?random=1",
+      "https://picsum.photos/700/900?random=2",
+      "https://picsum.photos/700/900?random=9",
+      "https://picsum.photos/700/900?random=10"
+    ],
+    "descriptionFr": "Robe longue en bogolan authentique, coupe fluide et manches amples. Pensée pour sublimer la silhouette tout en respectant la pudeur — pièce idéale pour les grandes occasions comme le quotidien élégant.",
+    "descriptionEn": "Long dress in authentic bogolan cloth, fluid cut with wide sleeves. Designed to celebrate the silhouette while honoring modesty — ideal for special occasions and elegant everyday wear alike.",
+    "dateAdded": "2026-08-20",
     "inStock": true
   },
   {
@@ -17,6 +26,15 @@
     "price": 9500,
     "image": "https://picsum.photos/500/650?random=3",
     "hoverImage": "https://picsum.photos/500/650?random=4",
+    "images": [
+      "https://picsum.photos/700/900?random=3",
+      "https://picsum.photos/700/900?random=4",
+      "https://picsum.photos/700/900?random=11",
+      "https://picsum.photos/700/900?random=12"
+    ],
+    "descriptionFr": "Voile léger en soie teinté terracotta, doux au toucher et facile à draper. Un accessoire polyvalent qui complète toutes les tenues avec une touche de couleur chaleureuse.",
+    "descriptionEn": "Lightweight silk veil dyed in terracotta, soft to the touch and easy to drape. A versatile accessory that completes any outfit with a warm splash of color.",
+    "dateAdded": "2026-07-15",
     "inStock": true
   },
   {
@@ -27,6 +45,15 @@
     "price": 28000,
     "image": "https://picsum.photos/500/650?random=5",
     "hoverImage": "https://picsum.photos/500/650?random=6",
+    "images": [
+      "https://picsum.photos/700/900?random=5",
+      "https://picsum.photos/700/900?random=6",
+      "https://picsum.photos/700/900?random=13",
+      "https://picsum.photos/700/900?random=14"
+    ],
+    "descriptionFr": "Ensemble deux pièces en pagne royal, haut ajusté et jupe évasée. Un mariage parfait entre tradition malienne et allure contemporaine, confectionné avec des tissus soigneusement sélectionnés.",
+    "descriptionEn": "Two-piece set in royal pagne fabric, fitted top and flared skirt. A perfect blend of Malian tradition and contemporary style, crafted from carefully selected fabrics.",
+    "dateAdded": "2026-06-01",
     "inStock": true
   },
   {
@@ -37,6 +64,15 @@
     "price": 16000,
     "image": "https://picsum.photos/500/650?random=7",
     "hoverImage": "https://picsum.photos/500/650?random=8",
+    "images": [
+      "https://picsum.photos/700/900?random=7",
+      "https://picsum.photos/700/900?random=8",
+      "https://picsum.photos/700/900?random=15",
+      "https://picsum.photos/700/900?random=16"
+    ],
+    "descriptionFr": "Pantalon large en pagne indigo, taille haute et coupe confortable. Facile à assortir, il s'impose comme une pièce essentielle pour un style à la fois pudique et moderne.",
+    "descriptionEn": "Wide-leg pants in indigo pagne fabric, high waist and comfortable cut. Easy to style, it's an essential piece for a look that's both modest and modern.",
+    "dateAdded": "2026-05-01",
     "inStock": true
   }
 ]
