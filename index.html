@@ -183,12 +183,17 @@
     .contact-form .form-row{ grid-template-columns:1fr; }
   }
 
+  .menu-toggle{ display:none; background:none; border:none; font-size:20px; line-height:1; cursor:pointer; color:var(--mudbrown); padding:0; }
+
   @media (max-width:700px){
     .wrap{ padding:0 20px; }
+    .menu-toggle{ display:block; }
+    nav{ display:none; width:100%; order:3; }
+    nav.open{ display:block; }
+    nav ul{ flex-direction:column; gap:0; width:100%; }
+    nav li{ border-top:1px solid var(--line); }
+    nav a{ display:block; padding:16px 2px; }
     .header-inner{ flex-wrap:wrap; row-gap:14px; }
-    nav{ order:3; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-    nav ul{ flex-wrap:nowrap; gap:22px; width:max-content; padding-bottom:2px; }
-    nav a{ white-space:nowrap; }
     .hero-copy{ padding:40px 0; }
     .collections{ grid-template-columns:1fr 1fr; }
     .valeurs-grid{ grid-template-columns:1fr; }
@@ -216,6 +221,7 @@
         <button onclick="setLang('en',this)">EN</button>
       </div>
       <span>🔍</span><span>👤</span><span>🛍️</span>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
     </div>
   </div>
 </header>
@@ -457,6 +463,10 @@
       else{ el.placeholder = text; }
     });
     document.documentElement.setAttribute('data-lang', lang);
+  }
+
+  function toggleMenu(){
+    document.querySelector('nav').classList.toggle('open');
   }
 </script>
 
