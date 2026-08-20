@@ -131,6 +131,37 @@ function renderProducts(){
     });
 }
 
+function categoryCardHTML(c){
+  const badge = c.available
+    ? ''
+    : '<span class="col-unavailable-badge fr">Indisponible</span><span class="col-unavailable-badge en" style="display:none;">Unavailable</span>';
+  return `
+    <div class="col-card ${c.available ? '' : 'unavailable'}">
+      <div class="ph" style="height:100%; background-image:url('${c.image}');"></div>
+      ${badge}
+      <div class="col-label fr">${c.nameFr}</div><div class="col-label en" style="display:none;">${c.nameEn}</div>
+    </div>
+  `;
+}
+
+// Renders the "Nos Collections" cards from categories.json into
+// #collections-grid, if present — only index.html has one. Each category's
+// `available` flag controls the "Indisponible" badge — today that's a plain
+// JSON edit, later a toggle in the admin UI (see bogoland-v4-plan memory).
+function renderCategories(){
+  const grid = document.getElementById('collections-grid');
+  if(!grid) return;
+
+  fetch('categories.json')
+    .then(res => res.json())
+    .then(categories => {
+      grid.innerHTML = categories.map(categoryCardHTML).join('');
+    })
+    .catch(err => {
+      console.error('Could not load categories.json', err);
+    });
+}
+
 // Renders a single product's detail view (gallery, info, WhatsApp/cart
 // buttons, similar products) into #product-detail, if present — only
 // product.html has one.
@@ -343,6 +374,7 @@ function renderCart(){
 
 document.addEventListener('DOMContentLoaded', () => {
   renderProducts();
+  renderCategories();
   renderProductDetail();
   renderCart();
   updateCartBadge();

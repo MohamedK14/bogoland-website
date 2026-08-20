@@ -93,6 +93,11 @@ nav a.active::after{ width:100%; }
 .col-label{ position:absolute; left:50%; bottom:16px; transform:translateX(-50%);
   background:var(--mudbrown); color:var(--ivory); padding:9px 20px; border-radius:20px;
   font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; }
+.col-card.unavailable .ph{ filter:grayscale(1) brightness(0.6); }
+.col-card.unavailable .col-label{ background:rgba(46,32,19,0.55); }
+.col-unavailable-badge{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  background:var(--clay); color:var(--ivory); padding:9px 20px; border-radius:20px;
+  font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; z-index:2; }
 .voir-boutique{ text-align:center; margin-top:40px; }
 .btn-outline{ display:inline-block; border:1px solid var(--mudbrown); padding:15px 34px;
   font-size:12px; letter-spacing:0.07em; text-transform:uppercase; }

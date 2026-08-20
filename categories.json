@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "slug": "robes",
+    "nameFr": "Robes",
+    "nameEn": "Dresses",
+    "image": "robe.jpeg",
+    "available": true
+  },
+  {
+    "id": 2,
+    "slug": "ensembles",
+    "nameFr": "Ensembles",
+    "nameEn": "Sets",
+    "image": "ensemble.jpeg",
+    "available": true
+  },
+  {
+    "id": 3,
+    "slug": "voiles",
+    "nameFr": "Voiles",
+    "nameEn": "Veils",
+    "image": "voile.jpeg",
+    "available": false
+  },
+  {
+    "id": 4,
+    "slug": "pants-pagne",
+    "nameFr": "Pants Pagne",
+    "nameEn": "Pants Pagne",
+    "image": "pantsPagne.jpeg",
+    "available": true
+  },
+  {
+    "id": 5,
+    "slug": "nouveautes",
+    "nameFr": "Nouveautés",
+    "nameEn": "New In",
+    "image": "nouveautes.jpeg",
+    "available": true
+  }
+]
