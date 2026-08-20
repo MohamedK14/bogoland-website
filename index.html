@@ -136,6 +136,21 @@
   .insta-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
   .insta-grid .ph{ aspect-ratio:1; border-radius:2px; }
 
+  /* CONTACT */
+  .contact-section{ padding:90px 0; }
+  .contact-form{ max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:18px; }
+  .contact-form .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .contact-form input, .contact-form textarea{
+    width:100%; border:1px solid var(--line); border-radius:2px; padding:14px 16px;
+    font-family:'Jost'; font-size:14px; color:var(--mudbrown); background:var(--ivory);
+  }
+  .contact-form input::placeholder, .contact-form textarea::placeholder{ color:rgba(46,32,19,0.45); }
+  .contact-form input:focus, .contact-form textarea:focus{ outline:none; border-color:var(--clay); }
+  .contact-form textarea{ resize:vertical; min-height:180px; }
+  .contact-submit{ align-self:flex-start; background:var(--mudbrown); color:var(--ivory); border:none;
+    padding:16px 40px; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; border-radius:2px; }
+  .contact-submit:hover{ background:var(--clay); }
+
   /* FOOTER */
   footer{ background:var(--mudbrown); color:var(--ivory); padding:70px 0 0; position:relative; overflow:hidden; }
   .footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1.2fr; gap:40px; padding-bottom:50px; }
@@ -161,6 +176,7 @@
     .split-section{ grid-template-columns:1fr; }
     .footer-grid{ grid-template-columns:1fr 1fr; padding:0 40px 40px; }
     .insta-grid{ grid-template-columns:repeat(2,1fr); }
+    .contact-form .form-row{ grid-template-columns:1fr; }
   }
 </style>
 </head>
@@ -176,7 +192,7 @@
         <li><a href="#" class="fr">Ensembles</a><a href="#" class="en">Sets</a></li>
         <li><a href="#" class="fr">Voiles</a><a href="#" class="en">Veils</a></li>
         <li><a href="#" class="fr">Pants Pagne</a><a href="#" class="en">Pants Pagne</a></li>
-        <li><a href="#" class="fr">Contact</a><a href="#" class="en">Contact</a></li>
+        <li><a href="contact.html" class="fr">Contact</a><a href="contact.html" class="en">Contact</a></li>
       </ul>
     </nav>
     <div class="header-icons">
@@ -436,6 +452,12 @@
     btn.classList.add('active');
     document.querySelectorAll('.fr').forEach(el => el.style.display = lang === 'fr' ? '' : 'none');
     document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+    document.querySelectorAll('[data-fr]').forEach(el => {
+      const text = lang === 'fr' ? el.dataset.fr : el.dataset.en;
+      if(el.tagName === 'BUTTON'){ el.textContent = text; }
+      else{ el.placeholder = text; }
+    });
+    document.documentElement.setAttribute('data-lang', lang);
   }
 </script>
 
