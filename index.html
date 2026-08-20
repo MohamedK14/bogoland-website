@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr" data-lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOGOLAND — Maquette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F7F1E6;
+    --ivory-deep:#EFE4CE;
+    --mudbrown:#2E2013;
+    --clay:#B5502F;
+    --indigo:#26344A;
+    --ochre:#C4922B;
+    --line: rgba(46,32,19,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--mudbrown);
+    font-family:'Jost', sans-serif;
+    font-weight:400;
+    line-height:1.6;
+  }
+  h1,h2,h3,.display{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.005em; }
+  em{ font-style:italic; color:var(--clay); }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1280px; margin:0 auto; padding:0 40px;}
+  [data-lang="en"] .fr{display:none;} [data-lang="fr"] .en{display:none;}
+
+  .ph{
+    background: linear-gradient(140deg, var(--ivory-deep), #DFC9A0 55%, var(--ivory-deep));
+    position:relative; display:flex; align-items:center; justify-content:center;
+    color:rgba(46,32,19,0.35); font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    overflow:hidden;
+  }
+  .ph::after{ content:""; position:absolute; inset:0;
+    background-image: repeating-linear-gradient(45deg, rgba(46,32,19,0.035) 0 2px, transparent 2px 16px); }
+
+  /* bogolan-inspired geometric pattern strip (original triangle/diamond motif) */
+  .pattern-strip{ height:14px; width:100%;
+    background: repeating-linear-gradient(45deg, var(--clay) 0 7px, var(--ochre) 7px 14px);
+    clip-path: polygon(0 0,100% 0,100% 60%,0 100%);
+  }
+  .pattern-divider{ display:block; width:100%; height:46px; }
+
+  header{ padding:26px 0; border-bottom:1px solid var(--line); background:var(--ivory); position:sticky; top:0; z-index:50; }
+  .header-inner{ display:flex; align-items:center; justify-content:space-between; }
+  .logo{ font-size:26px; letter-spacing:0.03em; }
+  .logo .dot{ color:var(--clay); }
+  nav ul{ list-style:none; display:flex; gap:34px; }
+  nav a{ font-size:13px; letter-spacing:0.05em; text-transform:uppercase; position:relative; padding-bottom:4px; }
+  nav a::after{ content:""; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--clay); transition:width .25s; }
+  nav a:hover::after{ width:100%; }
+  .header-icons{ display:flex; gap:20px; font-size:16px; align-items:center; }
+  .lang-toggle{ display:flex; border:1px solid var(--line); border-radius:20px; overflow:hidden; font-size:11px; }
+  .lang-toggle button{ padding:5px 12px; background:none; border:none; cursor:pointer; font-family:'Jost'; font-weight:500; }
+  .lang-toggle button.active{ background:var(--indigo); color:var(--ivory); }
+
+  /* HERO */
+  .hero{ display:grid; grid-template-columns:1.05fr 0.95fr; min-height:620px; }
+  .hero-copy{ display:flex; flex-direction:column; justify-content:center; padding:60px 0; max-width:520px; }
+  .hero-eyebrow{ font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--clay); font-weight:600; margin-bottom:20px; }
+  .hero h1{ font-size:clamp(38px,4.6vw,58px); line-height:1.12; }
+  .hero p.sub{ margin-top:24px; font-size:16px; color:rgba(46,32,19,0.75); max-width:420px; }
+  .hero-cta{ margin-top:34px; display:inline-block; background:var(--mudbrown); color:var(--ivory);
+    padding:16px 34px; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; border-radius:2px; }
+  .hero-cta:hover{ background:var(--clay); }
+  .hero-image{ position:relative; }
+  .hero-image .ph{ height:100%; }
+
+  /* NOTRE HISTOIRE */
+  .story{ display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center; padding:100px 0; }
+  .story-label{ font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--clay); font-weight:600; margin-bottom:14px; }
+  .story h2{ font-size:36px; margin-bottom:26px; }
+  .story p{ color:rgba(46,32,19,0.8); margin-bottom:16px; max-width:460px; }
+  .story-img .ph{ aspect-ratio:4/5; border-radius:2px; }
+  .story-cta{ margin-top:20px; display:inline-block; border:1px solid var(--mudbrown); padding:14px 30px;
+    font-size:12px; letter-spacing:0.06em; text-transform:uppercase; }
+  .story-cta:hover{ background:var(--mudbrown); color:var(--ivory); }
+
+  /* COLLECTIONS */
+  .section{ padding:90px 0; }
+  .section-head{ text-align:center; margin-bottom:50px; }
+  .section-head .story-label{ justify-content:center; display:flex; }
+  .section-head h2{ font-size:36px; }
+
+  .collections{ display:grid; grid-template-columns:repeat(5,1fr); gap:18px; }
+  .col-card{ position:relative; overflow:hidden; border-radius:2px; }
+  .col-card .ph{ aspect-ratio:3/4; }
+  .col-label{ position:absolute; left:0; right:0; bottom:0; padding:18px 16px;
+    background:linear-gradient(0deg, rgba(46,32,19,0.75), transparent); color:var(--ivory);
+    font-size:13px; letter-spacing:0.05em; text-transform:uppercase; text-align:center; }
+  .voir-boutique{ text-align:center; margin-top:40px; }
+  .btn-outline{ display:inline-block; border:1px solid var(--mudbrown); padding:15px 34px;
+    font-size:12px; letter-spacing:0.07em; text-transform:uppercase; }
+  .btn-outline:hover{ background:var(--mudbrown); color:var(--ivory); }
+
+  /* VALEURS */
+  .valeurs{ background:var(--indigo); color:var(--ivory); padding:90px 0; }
+  .valeurs .section-head h2, .valeurs .story-label{ color:var(--ivory); }
+  .valeurs .story-label{ color:var(--ochre); }
+  .valeurs-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:30px; text-align:center; }
+  .valeur-icon{ width:56px; height:56px; margin:0 auto 18px; border:1px solid rgba(247,241,230,0.35);
+    border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--ochre); }
+  .valeur h3{ font-size:15px; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:10px; color:var(--ivory); }
+  .valeur p{ font-size:13px; color:rgba(247,241,230,0.7); }
+
+  /* PRODUCTS */
+  .products-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:26px; }
+  .product-card .img-wrap{ position:relative; aspect-ratio:3/4; overflow:hidden; border-radius:2px; }
+  .product-card .img-wrap img{ width:100%; height:100%; object-fit:cover; transition:opacity .35s; }
+  .product-card .img-wrap img.hover-img{ position:absolute; inset:0; opacity:0; }
+  .product-card:hover .img-wrap img.hover-img{ opacity:1; }
+  .product-card:hover .img-wrap img.base-img{ opacity:0; }
+  .product-info{ padding-top:14px; }
+  .product-info h4{ font-family:'Fraunces'; font-style:italic; font-size:16px; margin-bottom:6px; }
+  .product-info .price{ font-size:14px; color:var(--clay); font-weight:600; }
+  .product-info .stock{ font-size:11px; color:rgba(46,32,19,0.5); margin-top:4px; }
+
+  /* TESTIMONIALS + INSTAGRAM */
+  .split-section{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:0; }
+  .testimonials{ background:var(--ivory-deep); padding:80px 50px; }
+  .testimonials h2{ font-size:26px; margin-bottom:30px; }
+  .testi-card{ background:var(--ivory); border:1px solid var(--line); border-radius:4px; padding:20px; margin-bottom:16px; }
+  .testi-card .stars{ color:var(--ochre); font-size:13px; margin-bottom:10px; }
+  .testi-card p{ font-size:13px; color:rgba(46,32,19,0.8); margin-bottom:12px; }
+  .testi-name{ font-size:12px; font-weight:600; display:flex; align-items:center; gap:8px; }
+  .testi-name .avatar{ width:26px; height:26px; border-radius:50%; background:var(--clay); color:var(--ivory);
+    display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
+
+  .instagram{ padding:80px 50px; }
+  .instagram h2{ font-size:26px; margin-bottom:8px; text-align:center; }
+  .instagram .handle{ text-align:center; color:var(--clay); font-size:13px; margin-bottom:30px; }
+  .insta-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .insta-grid .ph{ aspect-ratio:1; border-radius:2px; }
+
+  /* FOOTER */
+  footer{ background:var(--mudbrown); color:var(--ivory); padding:70px 0 0; position:relative; overflow:hidden; }
+  .footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1.2fr; gap:40px; padding-bottom:50px; }
+  .footer-brand .logo{ color:var(--ivory); margin-bottom:16px; }
+  .footer-brand p{ font-size:13px; color:rgba(247,241,230,0.65); max-width:260px; }
+  footer h5{ font-size:12px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:18px; color:var(--ochre); }
+  footer ul{ list-style:none; }
+  footer li{ margin-bottom:10px; font-size:13px; color:rgba(247,241,230,0.75); }
+  .newsletter-form{ display:flex; margin-top:14px; border:1px solid rgba(247,241,230,0.3); border-radius:24px; overflow:hidden; }
+  .newsletter-form input{ flex:1; background:none; border:none; padding:12px 18px; color:var(--ivory); font-family:'Jost'; font-size:13px; }
+  .newsletter-form input::placeholder{ color:rgba(247,241,230,0.5); }
+  .newsletter-form button{ background:var(--clay); color:var(--ivory); border:none; padding:0 20px; cursor:pointer; font-size:13px; }
+  .footer-bottom{ border-top:1px solid rgba(247,241,230,0.15); padding:20px 0; text-align:center;
+    font-size:12px; color:rgba(247,241,230,0.5); }
+  .footer-pattern{ position:absolute; right:-40px; bottom:-40px; width:220px; height:220px; opacity:0.08; }
+
+  @media (max-width:1000px){
+    .hero{ grid-template-columns:1fr; } .hero-copy{ padding:50px 40px; }
+    .story{ grid-template-columns:1fr; padding:70px 40px; gap:36px; }
+    .collections{ grid-template-columns:repeat(2,1fr); }
+    .valeurs-grid{ grid-template-columns:repeat(2,1fr); }
+    .products-grid{ grid-template-columns:repeat(2,1fr); }
+    .split-section{ grid-template-columns:1fr; }
+    .footer-grid{ grid-template-columns:1fr 1fr; padding:0 40px 40px; }
+    .insta-grid{ grid-template-columns:repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="logo">BOGOLAND<span class="dot">.</span></div>
+    <nav>
+      <ul>
+        <li><a href="#" class="fr">Accueil</a><a href="#" class="en">Home</a></li>
+        <li><a href="#" class="fr">Robes</a><a href="#" class="en">Dresses</a></li>
+        <li><a href="#" class="fr">Ensembles</a><a href="#" class="en">Sets</a></li>
+        <li><a href="#" class="fr">Voiles</a><a href="#" class="en">Veils</a></li>
+        <li><a href="#" class="fr">Pants Pagne</a><a href="#" class="en">Pants Pagne</a></li>
+        <li><a href="#" class="fr">Contact</a><a href="#" class="en">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-icons">
+      <div class="lang-toggle">
+        <button class="active" onclick="setLang('fr',this)">FR</button>
+        <button onclick="setLang('en',this)">EN</button>
+      </div>
+      <span>🔍</span><span>👤</span><span>🛍️</span>
+    </div>
+  </div>
+</header>
+
+<div class="pattern-strip"></div>
+
+<section class="hero wrap" style="padding:0;">
+  <div class="hero-copy">
+    <span class="hero-eyebrow fr">Collection Héritage</span>
+    <span class="hero-eyebrow en">Heritage Collection</span>
+    <h1 class="fr">Quand le bogolan<br>rencontre l'élégance,<br>la pudeur devient <em>une signature</em>.</h1>
+    <h1 class="en" style="display:none;">When bogolan<br>meets elegance,<br>modesty becomes <em>a signature</em>.</h1>
+    <p class="sub fr">Des créations pensées à Bamako, où tradition et modernité se rencontrent avec harmonie.</p>
+    <p class="sub en" style="display:none;">Creations designed in Bamako, where tradition and modernity meet in harmony.</p>
+    <a href="#" class="hero-cta fr">Découvrir la collection</a>
+    <a href="#" class="hero-cta en" style="display:none;">Discover the collection</a>
+  </div>
+  <div class="hero-image">
+    <div class="ph" style="height:100%;">PHOTO — modèle en création Bogoland</div>
+  </div>
+</section>
+
+<svg class="pattern-divider" viewBox="0 0 1200 46" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="0,46 40,0 80,46" fill="#26344A"/>
+  <polygon points="80,46 120,0 160,46" fill="#B5502F"/>
+  <polygon points="160,46 200,0 240,46" fill="#C4922B"/>
+  <polygon points="240,46 280,0 320,46" fill="#26344A"/>
+  <polygon points="320,46 360,0 400,46" fill="#B5502F"/>
+  <polygon points="400,46 440,0 480,46" fill="#C4922B"/>
+  <polygon points="480,46 520,0 560,46" fill="#26344A"/>
+  <polygon points="560,46 600,0 640,46" fill="#B5502F"/>
+  <polygon points="640,46 680,0 720,46" fill="#C4922B"/>
+  <polygon points="720,46 760,0 800,46" fill="#26344A"/>
+  <polygon points="800,46 840,0 880,46" fill="#B5502F"/>
+  <polygon points="880,46 920,0 960,46" fill="#C4922B"/>
+  <polygon points="960,46 1000,0 1040,46" fill="#26344A"/>
+  <polygon points="1040,46 1080,0 1120,46" fill="#B5502F"/>
+  <polygon points="1120,46 1160,0 1200,46" fill="#C4922B"/>
+</svg>
+
+<section class="story wrap">
+  <div class="story-img">
+    <div class="ph" style="height:100%;">PHOTO — portrait fondatrice / artisanat</div>
+  </div>
+  <div>
+    <span class="story-label fr">Notre Histoire</span>
+    <span class="story-label en" style="display:none;">Our Story</span>
+    <h2 class="fr">Une marque, une culture, une signature.</h2>
+    <h2 class="en" style="display:none;">A brand, a culture, a signature.</h2>
+    <p class="fr">BOGOLAND est une marque malienne qui célèbre l'élégance du bogolan à travers une vision moderne, raffinée et pudique.</p>
+    <p class="fr">Inspirée du riche patrimoine malien, chaque création est pensée pour sublimer la femme tout en respectant ses valeurs — douceur, authenticité et pudeur.</p>
+    <p class="fr">Bien plus qu'une marque, BOGOLAND est une invitation à porter sa culture avec fierté.</p>
+    <p class="en" style="display:none;">BOGOLAND is a Malian brand celebrating the elegance of bogolan through a modern, refined, and modest vision.</p>
+    <p class="en" style="display:none;">Inspired by Mali's rich heritage, every creation is designed to celebrate women while honoring their values — softness, authenticity, and modesty.</p>
+    <p class="en" style="display:none;">More than a brand, BOGOLAND is an invitation to wear your culture with pride.</p>
+    <a href="#" class="story-cta fr">En savoir plus</a>
+    <a href="#" class="story-cta en" style="display:none;">Learn more</a>
+  </div>
+</section>
+
+<section class="section wrap">
+  <div class="section-head">
+    <span class="story-label fr">Découvrir</span><span class="story-label en" style="display:none;">Discover</span>
+    <h2 class="fr">Nos Collections</h2><h2 class="en" style="display:none;">Our Collections</h2>
+  </div>
+  <div class="collections">
+    <div class="col-card"><div class="ph" style="height:100%;">PHOTO</div>
+      <div class="col-label fr">Robes</div><div class="col-label en" style="display:none;">Dresses</div></div>
+    <div class="col-card"><div class="ph" style="height:100%;">PHOTO</div>
+      <div class="col-label fr">Ensembles</div><div class="col-label en" style="display:none;">Sets</div></div>
+    <div class="col-card"><div class="ph" style="height:100%;">PHOTO</div>
+      <div class="col-label fr">Voiles</div><div class="col-label en" style="display:none;">Veils</div></div>
+    <div class="col-card"><div class="ph" style="height:100%;">PHOTO</div>
+      <div class="col-label fr">Pants Pagne</div><div class="col-label en" style="display:none;">Pants Pagne</div></div>
+    <div class="col-card"><div class="ph" style="height:100%;">PHOTO</div>
+      <div class="col-label fr">Nouveautés</div><div class="col-label en" style="display:none;">New In</div></div>
+  </div>
+  <div class="voir-boutique">
+    <a href="#" class="btn-outline fr">Voir toute la boutique</a>
+    <a href="#" class="btn-outline en" style="display:none;">View full shop</a>
+  </div>
+</section>
+
+<section class="valeurs">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="story-label fr">Ce qui nous définit</span><span class="story-label en" style="display:none;">What defines us</span>
+      <h2 class="fr">Nos Valeurs</h2><h2 class="en" style="display:none;">Our Values</h2>
+    </div>
+    <div class="valeurs-grid">
+      <div class="valeur">
+        <div class="valeur-icon">✦</div>
+        <h3 class="fr">Authenticité</h3><h3 class="en" style="display:none;">Authenticity</h3>
+        <p class="fr">Nous célébrons le bogolan et l'héritage africain avec respect et sincérité.</p>
+        <p class="en" style="display:none;">We celebrate bogolan and African heritage with respect and sincerity.</p>
+      </div>
+      <div class="valeur">
+        <div class="valeur-icon">☾</div>
+        <h3 class="fr">Pudeur</h3><h3 class="en" style="display:none;">Modesty</h3>
+        <p class="fr">Des créations pensées pour sublimer la femme tout en respectant sa pudeur.</p>
+        <p class="en" style="display:none;">Creations designed to celebrate women while honoring modesty.</p>
+      </div>
+      <div class="valeur">
+        <div class="valeur-icon">◆</div>
+        <h3 class="fr">Qualité</h3><h3 class="en" style="display:none;">Quality</h3>
+        <p class="fr">Des tissus sélectionnés avec soin et un savoir-faire qui garantit l'excellence.</p>
+        <p class="en" style="display:none;">Fabrics carefully selected with craftsmanship that guarantees excellence.</p>
+      </div>
+      <div class="valeur">
+        <div class="valeur-icon">☀</div>
+        <h3 class="fr">Héritage Africain</h3><h3 class="en" style="display:none;">African Heritage</h3>
+        <p class="fr">Valoriser notre culture et la transmettre fièrement à travers chaque pièce.</p>
+        <p class="en" style="display:none;">Honoring our culture and passing it on proudly through every piece.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section wrap">
+  <div class="section-head">
+    <span class="story-label fr">Nouveautés</span><span class="story-label en" style="display:none;">New In</span>
+    <h2 class="fr">Meilleures ventes</h2><h2 class="en" style="display:none;">Best Sellers</h2>
+  </div>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="img-wrap">
+        <img class="base-img" src="https://picsum.photos/seed/bogo1/500/650" alt="Robe Bogolan Ébène">
+        <img class="hover-img" src="https://picsum.photos/seed/bogo1b/500/650" alt="Robe Bogolan Ébène - vue 2">
+      </div>
+      <div class="product-info">
+        <h4 class="fr">Robe Bogolan — Ébène</h4><h4 class="en" style="display:none;">Bogolan Dress — Ebony</h4>
+        <p class="price">CFA22,000</p>
+        <p class="stock fr">En stock</p><p class="stock en" style="display:none;">In stock</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap">
+        <img class="base-img" src="https://picsum.photos/seed/bogo2/500/650" alt="Voile Soie — Terracotta">
+        <img class="hover-img" src="https://picsum.photos/seed/bogo2b/500/650" alt="Voile Soie — Terracotta - vue 2">
+      </div>
+      <div class="product-info">
+        <h4 class="fr">Voile Soie — Terracotta</h4><h4 class="en" style="display:none;">Silk Veil — Terracotta</h4>
+        <p class="price">CFA9,500</p>
+        <p class="stock fr">En stock</p><p class="stock en" style="display:none;">In stock</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap">
+        <img class="base-img" src="https://picsum.photos/seed/bogo3/500/650" alt="Ensemble Pagne Royal">
+        <img class="hover-img" src="https://picsum.photos/seed/bogo3b/500/650" alt="Ensemble Pagne Royal - vue 2">
+      </div>
+      <div class="product-info">
+        <h4 class="fr">Ensemble Pagne — Royal</h4><h4 class="en" style="display:none;">Pagne Set — Royal</h4>
+        <p class="price">CFA28,000</p>
+        <p class="stock fr">En stock</p><p class="stock en" style="display:none;">In stock</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="img-wrap">
+        <img class="base-img" src="https://picsum.photos/seed/bogo4/500/650" alt="Pants Pagne — Indigo">
+        <img class="hover-img" src="https://picsum.photos/seed/bogo4b/500/650" alt="Pants Pagne — Indigo - vue 2">
+      </div>
+      <div class="product-info">
+        <h4 class="fr">Pants Pagne — Indigo</h4><h4 class="en" style="display:none;">Pagne Pants — Indigo</h4>
+        <p class="price">CFA16,000</p>
+        <p class="stock fr">En stock</p><p class="stock en" style="display:none;">In stock</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="split-section">
+  <div class="testimonials">
+    <span class="story-label fr">Avis</span><span class="story-label en" style="display:none;">Reviews</span>
+    <h2 class="fr">Elles parlent de nous</h2><h2 class="en" style="display:none;">What they're saying</h2>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p class="fr">"La qualité est incroyable et les modèles sont encore plus beaux en vrai. Je recommande à 100%."</p>
+      <p class="en" style="display:none;">"The quality is incredible and the pieces are even more beautiful in person. 100% recommend."</p>
+      <div class="testi-name"><span class="avatar">F</span> Fatoumata K.</div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p class="fr">"Enfin une marque qui allie élégance, pudeur et culture. Je me sens tellement bien dans mes tenues Bogoland."</p>
+      <p class="en" style="display:none;">"Finally a brand that combines elegance, modesty, and culture. I feel so good in my Bogoland pieces."</p>
+      <div class="testi-name"><span class="avatar">A</span> Aïssata D.</div>
+    </div>
+  </div>
+  <div class="instagram">
+    <h2 class="fr">Suivez-nous sur Instagram</h2><h2 class="en" style="display:none;">Follow us on Instagram</h2>
+    <p class="handle">@bogoland_officiel</p>
+    <div class="insta-grid">
+      <div class="ph">PHOTO</div><div class="ph">PHOTO</div>
+      <div class="ph">PHOTO</div><div class="ph">PHOTO</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <div class="logo">BOGOLAND<span class="dot">.</span></div>
+      <p class="fr">Quand le bogolan rencontre l'élégance, la pudeur devient une signature.</p>
+      <p class="en" style="display:none;">When bogolan meets elegance, modesty becomes a signature.</p>
+    </div>
+    <div>
+      <h5 class="fr">Liens rapides</h5><h5 class="en" style="display:none;">Quick links</h5>
+      <ul>
+        <li class="fr">Accueil</li><li class="en" style="display:none;">Home</li>
+        <li class="fr">Boutique</li><li class="en" style="display:none;">Shop</li>
+        <li class="fr">Notre Histoire</li><li class="en" style="display:none;">Our Story</li>
+        <li class="fr">Contact</li><li class="en" style="display:none;">Contact</li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="fr">Besoin d'aide ?</h5><h5 class="en" style="display:none;">Need help?</h5>
+      <ul>
+        <li class="fr">FAQ</li><li class="en" style="display:none;">FAQ</li>
+        <li class="fr">Livraison</li><li class="en" style="display:none;">Shipping</li>
+        <li class="fr">Retours &amp; Remboursements</li><li class="en" style="display:none;">Returns &amp; Refunds</li>
+        <li class="fr">Guide des tailles</li><li class="en" style="display:none;">Size Guide</li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="fr">Restons connectés</h5><h5 class="en" style="display:none;">Stay connected</h5>
+      <p class="fr" style="font-size:13px; color:rgba(247,241,230,0.7); margin-bottom:14px;">Inscris-toi pour recevoir nos nouveautés et offres exclusives.</p>
+      <p class="en" style="display:none; font-size:13px; color:rgba(247,241,230,0.7); margin-bottom:14px;">Sign up for new arrivals and exclusive offers.</p>
+      <form class="newsletter-form" onsubmit="return false;">
+        <input type="email" placeholder="Votre adresse e-mail">
+        <button type="submit">→</button>
+      </form>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="fr">© 2027 Bogoland — Tous droits réservés</span>
+    <span class="en" style="display:none;">© 2027 Bogoland — All rights reserved</span>
+  </div>
+  <svg class="footer-pattern" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="40" r="14" fill="none" stroke="#F7F1E6" stroke-width="2"/>
+    <circle cx="90" cy="70" r="10" fill="none" stroke="#F7F1E6" stroke-width="2"/>
+    <path d="M20,120 L60,90 L100,120 L140,90 L180,120" fill="none" stroke="#F7F1E6" stroke-width="2"/>
+    <path d="M20,160 L60,130 L100,160 L140,130 L180,160" fill="none" stroke="#F7F1E6" stroke-width="2"/>
+  </svg>
+</footer>
+
+<script>
+  function setLang(lang, btn){
+    document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.fr').forEach(el => el.style.display = lang === 'fr' ? '' : 'none');
+    document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+  }
+</script>
+
+</body>
+</html>
