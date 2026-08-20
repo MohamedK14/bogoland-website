@@ -91,7 +91,7 @@ nav a.active::after{ width:100%; }
 .col-card{ position:relative; overflow:hidden; border-radius:2px; }
 .col-card .ph{ aspect-ratio:3/4; }
 .col-label{ position:absolute; left:50%; bottom:16px; transform:translateX(-50%);
-  background:var(--mudbrown); color:var(--ivory); padding:9px 20px; border-radius:20px;
+  background:rgba(46,32,19,0.72); backdrop-filter:blur(2px); color:var(--ivory); padding:9px 20px; border-radius:20px;
   font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; }
 .col-card.unavailable .ph{ filter:grayscale(1) brightness(0.6); }
 .col-card.unavailable .col-label{ background:rgba(46,32,19,0.55); }
