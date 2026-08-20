@@ -17,12 +17,15 @@
     --line: rgba(46,32,19,0.14);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
+  html{ overflow-x:hidden; width:100%; }
   body{
     background:var(--ivory);
     color:var(--mudbrown);
     font-family:'Jost', sans-serif;
     font-weight:400;
     line-height:1.6;
+    overflow-x:hidden;
+    width:100%;
   }
   h1,h2,h3,.display{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.005em; }
   em{ font-style:italic; color:var(--clay); }
@@ -93,6 +96,14 @@
   @media (max-width:1000px){
     .footer-grid{ grid-template-columns:1fr 1fr; padding:0 40px 40px; }
     .contact-form .form-row{ grid-template-columns:1fr; }
+  }
+
+  @media (max-width:700px){
+    .wrap{ padding:0 20px; }
+    .header-inner{ flex-wrap:wrap; row-gap:14px; }
+    nav{ order:3; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    nav ul{ flex-wrap:nowrap; gap:22px; width:max-content; padding-bottom:2px; }
+    nav a{ white-space:nowrap; }
   }
 </style>
 </head>
