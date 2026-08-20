@@ -90,9 +90,10 @@ nav a.active::after{ width:100%; }
 .collections{ display:grid; grid-template-columns:repeat(5,1fr); gap:18px; }
 .col-card{ position:relative; overflow:hidden; border-radius:2px; }
 .col-card .ph{ aspect-ratio:3/4; }
-.col-label{ position:absolute; left:0; right:0; bottom:0; padding:18px 16px;
-  background:linear-gradient(0deg, rgba(46,32,19,0.75), transparent); color:var(--ivory);
-  font-size:13px; letter-spacing:0.05em; text-transform:uppercase; text-align:center; }
+.col-label{ position:absolute; left:0; right:0; bottom:0; padding:26px 16px 18px;
+  background:linear-gradient(0deg, rgba(20,14,8,0.92) 0%, rgba(20,14,8,0.55) 55%, transparent 100%); color:var(--ivory);
+  font-size:13px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; text-align:center;
+  text-shadow:0 1px 3px rgba(0,0,0,0.5); }
 .voir-boutique{ text-align:center; margin-top:40px; }
 .btn-outline{ display:inline-block; border:1px solid var(--mudbrown); padding:15px 34px;
   font-size:12px; letter-spacing:0.07em; text-transform:uppercase; }
