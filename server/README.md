@@ -57,6 +57,8 @@ that are currently in `products.json`, now served from Neon.
 | PUT    | `/api/products/:id`       | admin | update product                            |
 | DELETE | `/api/products/:id`       | admin | delete product                            |
 | POST   | `/api/upload`             | admin | multipart `image` field → `{url}`         |
+| GET    | `/api/categories`         | none  | list all categories                       |
+| PUT    | `/api/categories/:id`     | admin | update category (e.g. `{available:false}`)|
 
 Admin routes need `Authorization: Bearer <token>` from the login response.
 
@@ -70,8 +72,13 @@ URL so the live frontend is allowed to call this API.
 
 ## Not done yet
 
-- The frontend (`js/main.js`) still fetches `products.json` directly — it
-  needs to be pointed at `GET /api/products` from this API instead once it's
-  deployed and seeded. That's a deliberate next step, not an oversight.
-- No admin UI yet — the admin routes exist but there's no page to use them
-  from. That's the next piece after the frontend is switched over.
+- The public frontend (`js/main.js`) still fetches `products.json` and
+  `categories.json` directly — it needs to be pointed at `GET /api/products`
+  and `GET /api/categories` instead once this server is deployed and seeded.
+  That's a deliberate next step, not an oversight.
+- `admin.html` (at the repo root) exists and has a working login form + a
+  toggle switch per category calling `PUT /api/categories/:id` — but it needs
+  `API_BASE` at the top of `js/admin.js` set to this server's deployed URL
+  before it can actually reach it. Product add/edit/delete has routes but no
+  UI yet — the category toggle was built first since that's what was asked
+  for.

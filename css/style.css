@@ -195,6 +195,26 @@ nav a.active::after{ width:100%; }
 .contact-submit:hover{ background:var(--clay); }
 .contact-note{ text-align:center; font-size:13px; color:rgba(46,32,19,0.55); margin-top:18px; }
 
+/* ADMIN */
+.admin-title{ font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(46,32,19,0.5); }
+.admin-section{ padding:70px 0; max-width:640px; margin:0 auto; }
+.admin-dashboard-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.admin-dashboard-head h2{ font-size:28px; }
+.admin-hint{ font-size:13px; color:rgba(46,32,19,0.6); margin-bottom:24px; }
+.admin-row{ display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:14px 0; border-bottom:1px solid var(--line); }
+.admin-row-info{ display:flex; align-items:center; gap:14px; }
+.admin-row-info img{ width:50px; height:65px; object-fit:cover; border-radius:2px; }
+.admin-row-info span{ font-family:'Fraunces'; font-style:italic; font-size:16px; }
+.admin-switch{ position:relative; display:inline-block; width:46px; height:26px; flex-shrink:0; }
+.admin-switch input{ opacity:0; width:0; height:0; }
+.admin-switch .slider{ position:absolute; inset:0; cursor:pointer; background:rgba(46,32,19,0.25);
+  transition:.2s; border-radius:26px; }
+.admin-switch .slider::before{ content:""; position:absolute; height:20px; width:20px; left:3px; bottom:3px;
+  background:var(--ivory); transition:.2s; border-radius:50%; }
+.admin-switch input:checked + .slider{ background:var(--clay); }
+.admin-switch input:checked + .slider::before{ transform:translateX(20px); }
+
 /* CART */
 .cart-empty{ text-align:center; color:rgba(46,32,19,0.6); }
 .cart-items{ display:flex; flex-direction:column; gap:18px; max-width:760px; margin:0 auto; }

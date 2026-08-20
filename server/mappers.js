@@ -22,4 +22,15 @@ function rowToProduct(row){
   };
 }
 
-module.exports = { rowToProduct };
+function rowToCategory(row){
+  return {
+    id: row.id,
+    slug: row.slug,
+    nameFr: row.name_fr,
+    nameEn: row.name_en,
+    image: row.image,
+    available: row.available,
+  };
+}
+
+module.exports = { rowToProduct, rowToCategory };

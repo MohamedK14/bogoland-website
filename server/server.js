@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const productsRouter = require('./routes/products');
+const categoriesRouter = require('./routes/categories');
 const adminRouter = require('./routes/admin');
 const uploadRouter = require('./routes/upload');
 
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/products', productsRouter);
+app.use('/api/categories', categoriesRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/upload', uploadRouter);
 

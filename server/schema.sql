@@ -14,3 +14,12 @@ CREATE TABLE IF NOT EXISTS products (
   in_stock       BOOLEAN NOT NULL DEFAULT true,
   click_count    INTEGER NOT NULL DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS categories (
+  id         SERIAL PRIMARY KEY,
+  slug       TEXT UNIQUE NOT NULL,
+  name_fr    TEXT NOT NULL,
+  name_en    TEXT NOT NULL,
+  image      TEXT NOT NULL DEFAULT '',
+  available  BOOLEAN NOT NULL DEFAULT true
+);

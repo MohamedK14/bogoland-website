@@ -1,4 +1,4 @@
-// One-time script: loads ../products.json into the Neon products table.
+// One-time script: loads ../products.json and ../categories.json into Neon.
 // Run after schema.sql has been applied: npm run seed
 require('dotenv').config();
 const fs = require('fs');
@@ -7,6 +7,7 @@ const pool = require('./db');
 
 async function seed(){
   const products = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'products.json'), 'utf8'));
+  const categories = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'categories.json'), 'utf8'));
 
   for(const p of products){
     await pool.query(
@@ -24,7 +25,17 @@ async function seed(){
         p.inStock !== false,
       ]
     );
-    console.log(`Inserted: ${p.nameFr}`);
+    console.log(`Inserted product: ${p.nameFr}`);
+  }
+
+  for(const c of categories){
+    await pool.query(
+      `INSERT INTO categories (slug, name_fr, name_en, image, available)
+       VALUES ($1,$2,$3,$4,$5)
+       ON CONFLICT (slug) DO NOTHING`,
+      [c.slug, c.nameFr, c.nameEn, c.image, c.available !== false]
+    );
+    console.log(`Inserted category: ${c.nameFr}`);
   }
 
   console.log('Seed complete.');
