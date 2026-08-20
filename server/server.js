@@ -1,0 +1,28 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+
+const productsRouter = require('./routes/products');
+const adminRouter = require('./routes/admin');
+const uploadRouter = require('./routes/upload');
+
+const app = express();
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+
+app.use(cors({
+  origin: allowedOrigins.length ? allowedOrigins : true,
+}));
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', service: 'bogoland-server' });
+});
+
+app.use('/api/products', productsRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/upload', uploadRouter);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`BOGOLAND server running on port ${PORT}`);
+});
