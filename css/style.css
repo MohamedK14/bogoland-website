@@ -167,11 +167,13 @@ nav a.active::after{ width:100%; }
 .instagram h2{ font-size:26px; margin-bottom:8px; text-align:center; }
 .instagram .handle{ text-align:center; color:var(--clay); font-size:13px; margin-bottom:30px; }
 .social-row{ display:flex; gap:22px; }
+.social-item{ display:flex; flex-direction:column; align-items:center; gap:8px; }
 .social-icon{ width:54px; height:54px; border:1px solid var(--line); border-radius:50%; color:var(--mudbrown);
   display:flex; align-items:center; justify-content:center;
   transition:background .2s, border-color .2s, transform .2s, color .2s; }
 .social-icon svg{ width:20px; height:20px; fill:currentColor; }
 .social-icon:hover{ background:var(--mudbrown); border-color:var(--mudbrown); color:var(--ivory); transform:translateY(-2px); }
+.social-label{ font-size:11px; letter-spacing:0.04em; text-transform:uppercase; color:rgba(46,32,19,0.6); }
 
 /* CONTACT */
 .contact-section{ padding:90px 0; }
