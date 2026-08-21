@@ -130,10 +130,9 @@ function initHeroStory(){
     dot.addEventListener('click', () => { goTo(i); start(); });
   });
 
-  // Pause while the user is reading/hovering, resume after.
-  section.addEventListener('mouseenter', stop);
-  section.addEventListener('mouseleave', start);
-
+  // Keeps auto-advancing regardless of mouse position — the section fills
+  // nearly the whole viewport, so pausing on hover would mean it barely
+  // ever moves for most visitors.
   start();
 }
 
