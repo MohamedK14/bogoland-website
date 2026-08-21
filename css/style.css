@@ -8,6 +8,7 @@
   --line: rgba(46,32,19,0.14);
 }
 *{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
 html{ overflow-x:hidden; width:100%; }
 body{
   background:var(--ivory);
