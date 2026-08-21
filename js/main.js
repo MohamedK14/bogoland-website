@@ -123,7 +123,7 @@ function initHeroStory(){
   function start(){
     if(prefersReducedMotion) return; // respect the user's motion preference — no auto-advance
     stop();
-    timer = setInterval(next, 7000);
+    timer = setInterval(next, 5000);
   }
 
   dots.forEach((dot, i) => {
