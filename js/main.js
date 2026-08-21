@@ -148,7 +148,7 @@ function productCardHTML(p){
     ? '<span class="product-badge fr">Nouveau</span><span class="product-badge en" style="display:none;">New</span>'
     : '';
   return `
-    <a class="product-card ${p.inStock ? '' : 'out-of-stock'}" href="product.html?id=${p.id}">
+    <a class="product-card" href="product.html?id=${p.id}">
       <div class="img-wrap">
         ${badge}
         <img class="base-img" src="${p.image}" alt="${p.nameFr}">
@@ -292,7 +292,7 @@ function renderProductDetail(){
         : '';
 
       container.innerHTML = `
-        <div class="detail-gallery ${product.inStock ? '' : 'out-of-stock'}">
+        <div class="detail-gallery">
           <div class="detail-main-img">
             ${badge}
             <img id="detail-main-img" src="${product.images[0]}" alt="${product.nameFr}">
