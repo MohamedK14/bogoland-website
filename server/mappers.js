@@ -33,4 +33,15 @@ function rowToCategory(row){
   };
 }
 
-module.exports = { rowToProduct, rowToCategory };
+// Never include password_hash here — this is what gets sent to the browser.
+function rowToCustomer(row){
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    address: row.address,
+  };
+}
+
+module.exports = { rowToProduct, rowToCategory, rowToCustomer };

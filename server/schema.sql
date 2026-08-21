@@ -23,3 +23,35 @@ CREATE TABLE IF NOT EXISTS categories (
   image      TEXT NOT NULL DEFAULT '',
   available  BOOLEAN NOT NULL DEFAULT true
 );
+
+-- Customer accounts (separate from the single hardcoded admin account).
+CREATE TABLE IF NOT EXISTS customers (
+  id            SERIAL PRIMARY KEY,
+  name          TEXT NOT NULL,
+  email         TEXT UNIQUE NOT NULL,
+  phone         TEXT NOT NULL DEFAULT '',
+  address       TEXT NOT NULL DEFAULT '',
+  password_hash TEXT NOT NULL,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- One row per WhatsApp checkout made while logged in (guests don't create
+-- rows here — that's unchanged). order_items snapshots name/price/image at
+-- purchase time so history stays accurate even if the product is later
+-- edited or deleted.
+CREATE TABLE IF NOT EXISTS orders (
+  id          SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  total       INTEGER NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+  id         SERIAL PRIMARY KEY,
+  order_id   INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  product_id INTEGER REFERENCES products(id) ON DELETE SET NULL,
+  name_fr    TEXT NOT NULL,
+  price      INTEGER NOT NULL,
+  qty        INTEGER NOT NULL,
+  image      TEXT NOT NULL DEFAULT ''
+);
