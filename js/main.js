@@ -89,51 +89,124 @@ function initSearch(){
   });
 }
 
-// --- HERO/STORY MERGED SLIDESHOW (index.html only) ---
-// Crossfades between the hero and "Notre Histoire" content on the same
-// full-bleed photo. Each slide has its own background-image already, so
-// swapping in more photos later is just editing index.html, no JS changes.
+// --- HERO/STORY MERGED SLIDER (index.html only) ---
+// No auto-advance — this is a real drag/swipe slider (Pointer Events cover
+// touch, mouse, and pen with the same code). Drag it and the photo+text
+// follow your finger 1:1, snapping to the next/previous slide past a
+// threshold or springing back otherwise. Arrows + dots offer the same
+// navigation for anyone who doesn't drag.
 function initHeroStory(){
   const section = document.getElementById('hero-story');
   if(!section) return;
 
-  const slides = section.querySelectorAll('.hero-story-slide');
-  const dots = section.querySelectorAll('.hero-story-dot');
+  const slides = Array.from(section.querySelectorAll('.hero-story-slide'));
+  const dots = Array.from(section.querySelectorAll('.hero-story-dot'));
+  const prevBtn = section.querySelector('.hero-story-arrow-prev');
+  const nextBtn = section.querySelector('.hero-story-arrow-next');
   if(slides.length < 2) return;
 
   let current = 0;
-  let timer = null;
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function goTo(index){
-    slides[current].classList.remove('active');
+  function setTransform(slide, percent, animate){
+    slide.style.transition = animate ? '' : 'none';
+    slide.style.transform = `translateX(${percent}%)`;
+  }
+
+  // direction: +1 moves forward (incoming slide enters from the right),
+  // -1 moves backward (incoming slide enters from the left).
+  function goTo(targetIndex, direction){
+    if(targetIndex === current) return;
+    const outgoing = slides[current];
+    const incoming = slides[targetIndex];
+
+    incoming.style.zIndex = 2;
+    outgoing.style.zIndex = 1;
+    setTransform(incoming, direction > 0 ? 100 : -100, false);
+    void incoming.offsetWidth; // force the parked position to commit before animating
+
+    requestAnimationFrame(() => {
+      setTransform(incoming, 0, true);
+      setTransform(outgoing, direction > 0 ? -100 : 100, true);
+    });
+
     if(dots[current]) dots[current].classList.remove('active');
-    current = index;
-    slides[current].classList.add('active');
+    slides[current].classList.remove('active');
+    current = targetIndex;
     if(dots[current]) dots[current].classList.add('active');
+    slides[current].classList.add('active');
   }
 
-  function next(){ goTo((current + 1) % slides.length); }
-
-  function stop(){
-    if(timer) clearInterval(timer);
-    timer = null;
-  }
-
-  function start(){
-    if(prefersReducedMotion) return; // respect the user's motion preference — no auto-advance
-    stop();
-    timer = setInterval(next, 5000);
-  }
+  function next(){ goTo((current + 1) % slides.length, 1); }
+  function prev(){ goTo((current - 1 + slides.length) % slides.length, -1); }
 
   dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => { goTo(i); start(); });
+    dot.addEventListener('click', () => goTo(i, i > current ? 1 : -1));
   });
+  if(nextBtn) nextBtn.addEventListener('click', next);
+  if(prevBtn) prevBtn.addEventListener('click', prev);
 
-  // Keeps auto-advancing regardless of mouse position — the section fills
-  // nearly the whole viewport, so pausing on hover would mean it barely
-  // ever moves for most visitors.
-  start();
+  // --- Drag/swipe ---
+  let dragging = false;
+  let dragMoved = false;
+  let startX = 0;
+  let deltaX = 0;
+
+  function onPointerDown(e){
+    if(e.target.closest('.hero-story-arrow, .hero-story-dot')) return;
+    dragging = true;
+    dragMoved = false;
+    startX = e.clientX;
+    deltaX = 0;
+    slides.forEach(s => { s.style.transition = 'none'; });
+    section.setPointerCapture(e.pointerId);
+  }
+
+  function onPointerMove(e){
+    if(!dragging) return;
+    deltaX = e.clientX - startX;
+    if(Math.abs(deltaX) > 8) dragMoved = true;
+
+    const width = section.clientWidth || 1;
+    const percent = Math.max(-100, Math.min(100, (deltaX / width) * 100));
+    slides[current].style.transform = `translateX(${percent}%)`;
+
+    const neighborIndex = percent < 0
+      ? (current + 1) % slides.length
+      : (current - 1 + slides.length) % slides.length;
+    if(neighborIndex !== current){
+      const neighbor = slides[neighborIndex];
+      neighbor.style.zIndex = 1;
+      neighbor.style.transform = `translateX(${percent < 0 ? percent + 100 : percent - 100}%)`;
+    }
+  }
+
+  function onPointerUp(){
+    if(!dragging) return;
+    dragging = false;
+
+    const width = section.clientWidth || 1;
+    const threshold = width * 0.18;
+
+    if(deltaX <= -threshold){
+      next();
+    } else if(deltaX >= threshold){
+      prev();
+    } else {
+      // Didn't drag far enough — spring back to where we started.
+      slides.forEach((s, i) => setTransform(s, i === current ? 0 : (i > current ? 100 : -100), true));
+    }
+
+    // Swallow the synthetic click a touch-drag leaves behind, so a swipe
+    // over the CTA button doesn't also activate it.
+    if(dragMoved){
+      section.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); }, { capture: true, once: true });
+    }
+  }
+
+  section.addEventListener('pointerdown', onPointerDown);
+  section.addEventListener('pointermove', onPointerMove);
+  section.addEventListener('pointerup', onPointerUp);
+  section.addEventListener('pointercancel', onPointerUp);
 }
 
 // Fire-and-forget: increments a product's click_count server-side so the
