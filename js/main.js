@@ -89,6 +89,54 @@ function initSearch(){
   });
 }
 
+// --- HERO/STORY MERGED SLIDESHOW (index.html only) ---
+// Crossfades between the hero and "Notre Histoire" content on the same
+// full-bleed photo. Each slide has its own background-image already, so
+// swapping in more photos later is just editing index.html, no JS changes.
+function initHeroStory(){
+  const section = document.getElementById('hero-story');
+  if(!section) return;
+
+  const slides = section.querySelectorAll('.hero-story-slide');
+  const dots = section.querySelectorAll('.hero-story-dot');
+  if(slides.length < 2) return;
+
+  let current = 0;
+  let timer = null;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function goTo(index){
+    slides[current].classList.remove('active');
+    if(dots[current]) dots[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    if(dots[current]) dots[current].classList.add('active');
+  }
+
+  function next(){ goTo((current + 1) % slides.length); }
+
+  function stop(){
+    if(timer) clearInterval(timer);
+    timer = null;
+  }
+
+  function start(){
+    if(prefersReducedMotion) return; // respect the user's motion preference — no auto-advance
+    stop();
+    timer = setInterval(next, 7000);
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => { goTo(i); start(); });
+  });
+
+  // Pause while the user is reading/hovering, resume after.
+  section.addEventListener('mouseenter', stop);
+  section.addEventListener('mouseleave', start);
+
+  start();
+}
+
 // Fire-and-forget: increments a product's click_count server-side so the
 // (future) "Meilleures ventes" section can sort by real interest. Never
 // blocks the WhatsApp link itself if the backend is asleep/unreachable.
@@ -597,6 +645,7 @@ function renderCart(){
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initSearch();
+  initHeroStory();
   renderProducts();
   renderCategories();
   renderShop();
