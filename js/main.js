@@ -96,6 +96,33 @@ function trackProductClick(productId){
   fetch(`${API_BASE}/api/products/${productId}/click`, { method: 'POST' }).catch(() => {});
 }
 
+// --- CUSTOMER ACCOUNT (login/register live in account.html + js/account.js;
+// this bit is shared here so checkout can use it from any page) ---
+const CUSTOMER_TOKEN_KEY = 'bogoland_customer_token';
+
+function getCustomerToken(){
+  try { return localStorage.getItem(CUSTOMER_TOKEN_KEY); } catch(e){ return null; }
+}
+
+// Fire-and-forget: if a customer is logged in, this purchase gets saved as
+// an order (shows up later in "Historique des commandes"). Guests checking
+// out without an account are completely unaffected — nothing is sent.
+function recordOrder(items, total){
+  const token = getCustomerToken();
+  if(!token) return;
+
+  fetch(`${API_BASE}/api/orders`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+    body: JSON.stringify({
+      items: items.map(({ product, qty }) => ({
+        productId: product.id, nameFr: product.nameFr, price: product.price, qty, image: product.image,
+      })),
+      total,
+    }),
+  }).catch(() => {});
+}
+
 // --- DAY/NIGHT THEME TOGGLE ---
 // The site is French-only now (no more FR/EN switch), so that header slot
 // became a light/dark theme toggle instead. A tiny inline script in each
@@ -438,7 +465,11 @@ function renderProductDetail(){
         document.getElementById('cart-note-en').style.display = document.documentElement.getAttribute('data-lang') === 'en' ? 'block' : 'none';
       });
 
-      whatsappBtn.addEventListener('click', () => trackProductClick(product.id));
+      whatsappBtn.addEventListener('click', () => {
+        trackProductClick(product.id);
+        const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+        recordOrder([{ product, qty }], product.price * qty);
+      });
 
       renderSimilarProducts(products, product);
     })
@@ -541,6 +572,7 @@ function renderCart(){
       document.querySelectorAll('.lang-toggle button').forEach(b => b.addEventListener('click', updateWhatsAppCartLink));
       document.getElementById('cart-whatsapp-btn').addEventListener('click', () => {
         items.forEach(({ product }) => trackProductClick(product.id));
+        recordOrder(items, total);
       });
 
       container.querySelectorAll('.cart-item').forEach(el => {

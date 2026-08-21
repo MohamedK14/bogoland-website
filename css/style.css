@@ -384,6 +384,27 @@ select#product-category{ width:100%; border:1px solid var(--line); border-radius
 .cart-total{ font-size:18px; font-weight:600; }
 .cart-summary .whatsapp-btn{ width:100%; max-width:280px; }
 
+/* ACCOUNT */
+.account-section{ padding:80px 0; max-width:920px; margin:0 auto; }
+.account-tab.active{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+.icon-btn.active{ color:var(--clay); }
+
+.account-grid{ display:grid; grid-template-columns:1fr 1.2fr; gap:50px; align-items:start; }
+.account-block h3{ font-size:20px; margin-bottom:18px; }
+
+.order-card{ border:1px solid var(--line); border-radius:6px; padding:16px 18px; margin-bottom:14px; }
+.order-card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;
+  padding-bottom:10px; border-bottom:1px solid var(--line); }
+.order-date{ font-size:12px; color:rgba(var(--ink-rgb),0.55); text-transform:capitalize; }
+.order-total{ font-weight:600; color:var(--clay); }
+.order-items{ display:flex; flex-direction:column; gap:6px; }
+.order-line{ display:flex; align-items:center; justify-content:space-between; font-size:13px;
+  color:rgba(var(--ink-rgb),0.75); }
+
+@media (max-width:1000px){
+  .account-grid{ grid-template-columns:1fr; }
+}
+
 /* SEARCH */
 .search-overlay{ position:fixed; inset:0; background:rgba(var(--ink-rgb),0.55);
   display:flex; align-items:flex-start; justify-content:center; padding:90px 24px 24px; z-index:200; }
