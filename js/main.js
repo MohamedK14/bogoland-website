@@ -1,6 +1,17 @@
 // Friend's WhatsApp business number (Mali), digits only, no + or spaces.
 const WHATSAPP_NUMBER = '22376448555';
 
+// Live backend (Render) — see server/README.md. Products/categories now come
+// from here (Neon DB) instead of the old static products.json/categories.json.
+const API_BASE = 'https://bogoland-backend.onrender.com';
+
+// Fire-and-forget: increments a product's click_count server-side so the
+// (future) "Meilleures ventes" section can sort by real interest. Never
+// blocks the WhatsApp link itself if the backend is asleep/unreachable.
+function trackProductClick(productId){
+  fetch(`${API_BASE}/api/products/${productId}/click`, { method: 'POST' }).catch(() => {});
+}
+
 function setLang(lang, btn){
   document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
@@ -114,19 +125,19 @@ function productCardHTML(p){
   `;
 }
 
-// Renders product cards from products.json into #products-grid, if that
+// Renders product cards from the live API into #products-grid, if that
 // container exists on the current page (only index.html has one).
 function renderProducts(){
   const grid = document.getElementById('products-grid');
   if(!grid) return;
 
-  fetch('products.json')
+  fetch(`${API_BASE}/api/products`)
     .then(res => res.json())
     .then(products => {
       grid.innerHTML = products.map(productCardHTML).join('');
     })
     .catch(err => {
-      console.error('Could not load products.json', err);
+      console.error('Could not load products from API', err);
       grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:rgba(46,32,19,0.5);">Produits indisponibles pour le moment.</p>';
     });
 }
@@ -144,7 +155,7 @@ function categoryCardHTML(c){
   `;
 }
 
-// Renders the "Nos Collections" cards from categories.json into
+// Renders the "Nos Collections" cards from the live API into
 // #collections-grid, if present — only index.html has one. Each category's
 // `available` flag controls the "Indisponible" badge — today that's a plain
 // JSON edit, later a toggle in the admin UI (see bogoland-v4-plan memory).
@@ -152,13 +163,13 @@ function renderCategories(){
   const grid = document.getElementById('collections-grid');
   if(!grid) return;
 
-  fetch('categories.json')
+  fetch(`${API_BASE}/api/categories`)
     .then(res => res.json())
     .then(categories => {
       grid.innerHTML = categories.map(categoryCardHTML).join('');
     })
     .catch(err => {
-      console.error('Could not load categories.json', err);
+      console.error('Could not load categories from API', err);
     });
 }
 
@@ -171,7 +182,7 @@ function renderProductDetail(){
 
   const id = Number(getQueryParam('id'));
 
-  fetch('products.json')
+  fetch(`${API_BASE}/api/products`)
     .then(res => res.json())
     .then(products => {
       const product = products.find(p => p.id === id);
@@ -257,10 +268,12 @@ function renderProductDetail(){
         document.getElementById('cart-note-en').style.display = document.documentElement.getAttribute('data-lang') === 'en' ? 'block' : 'none';
       });
 
+      whatsappBtn.addEventListener('click', () => trackProductClick(product.id));
+
       renderSimilarProducts(products, product);
     })
     .catch(err => {
-      console.error('Could not load products.json', err);
+      console.error('Could not load product from API', err);
       container.innerHTML = '<p style="text-align:center;">Erreur de chargement du produit.</p>';
     });
 }
@@ -317,7 +330,7 @@ function renderCart(){
     return;
   }
 
-  fetch('products.json')
+  fetch(`${API_BASE}/api/products`)
     .then(res => res.json())
     .then(products => {
       const items = cart
@@ -352,6 +365,9 @@ function renderCart(){
       };
       updateWhatsAppCartLink();
       document.querySelectorAll('.lang-toggle button').forEach(b => b.addEventListener('click', updateWhatsAppCartLink));
+      document.getElementById('cart-whatsapp-btn').addEventListener('click', () => {
+        items.forEach(({ product }) => trackProductClick(product.id));
+      });
 
       container.querySelectorAll('.cart-item').forEach(el => {
         const id = Number(el.dataset.id);

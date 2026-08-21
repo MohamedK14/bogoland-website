@@ -1,6 +1,4 @@
-// TODO: set this to the deployed server's URL once it exists (Render/Railway).
-// e.g. 'https://bogoland-server.onrender.com' — see server/README.md.
-const API_BASE = 'https://REPLACE-ME.onrender.com';
+const API_BASE = 'https://bogoland-backend.onrender.com';
 
 const TOKEN_KEY = 'bogoland_admin_token';
 
