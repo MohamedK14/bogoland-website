@@ -5,6 +5,14 @@ const WHATSAPP_NUMBER = '22376448555';
 // from here (Neon DB) instead of the old static products.json/categories.json.
 const API_BASE = 'https://bogoland-backend.onrender.com';
 
+// Small inline icons reused across the WhatsApp/cart buttons and the qty
+// stepper, so those controls read at a glance instead of relying on glyphs.
+const WHATSAPP_ICON_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.11-1.34A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Zm5.2 14.2c-.22.62-1.28 1.18-1.77 1.24-.45.06-.98.09-1.58-.1-.36-.11-.83-.27-1.43-.53-2.52-1.09-4.16-3.63-4.29-3.8-.13-.17-1.02-1.36-1.02-2.6 0-1.24.65-1.84.88-2.09.22-.25.49-.31.65-.31.16 0 .33 0 .47.01.15.01.35-.06.55.42.2.49.68 1.68.74 1.8.06.12.1.27.02.44-.08.17-.12.27-.24.42-.12.15-.25.33-.36.44-.12.12-.24.25-.1.5.14.25.6 1 1.29 1.62.89.79 1.63 1.04 1.88 1.16.25.12.4.1.55-.06.15-.16.63-.73.8-.99.17-.25.34-.21.56-.13.22.08 1.41.66 1.65.78.24.12.4.18.46.28.06.1.06.6-.16 1.22Z"/></svg>';
+const CART_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+const PLUS_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+const MINUS_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+const X_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+
 // Fire-and-forget: increments a product's click_count server-side so the
 // (future) "Meilleures ventes" section can sort by real interest. Never
 // blocks the WhatsApp link itself if the backend is asleep/unreachable.
@@ -312,9 +320,11 @@ function renderProductDetail(){
 
           <div class="detail-actions">
             <a id="whatsapp-btn" class="whatsapp-btn" target="_blank" rel="noopener">
+              ${WHATSAPP_ICON_SVG}
               <span class="fr">Commander sur WhatsApp</span><span class="en" style="display:none;">Order on WhatsApp</span>
             </a>
             <button id="cart-btn" class="cart-btn" type="button">
+              ${CART_ICON_SVG}
               <span class="fr">Ajouter au panier</span><span class="en" style="display:none;">Add to cart</span>
             </button>
             <p id="cart-note" class="cart-note fr" style="display:none;">Ajouté au panier.</p>
@@ -388,12 +398,12 @@ function cartItemHTML(product, qty){
         <h4 class="fr">${product.nameFr}</h4><h4 class="en" style="display:none;">${product.nameEn}</h4>
         <p class="price">${formatPrice(product.price)}</p>
         <div class="cart-item-qty">
-          <button type="button" class="qty-btn" data-action="decrease">−</button>
+          <button type="button" class="qty-btn" data-action="decrease" aria-label="Diminuer la quantité">${MINUS_ICON_SVG}</button>
           <span class="qty-value">${qty}</span>
-          <button type="button" class="qty-btn" data-action="increase">+</button>
+          <button type="button" class="qty-btn" data-action="increase" aria-label="Augmenter la quantité">${PLUS_ICON_SVG}</button>
         </div>
       </div>
-      <button type="button" class="cart-remove" aria-label="Remove">✕</button>
+      <button type="button" class="cart-remove" aria-label="Retirer du panier">${X_ICON_SVG}</button>
     </div>
   `;
 }
@@ -406,10 +416,13 @@ function renderCart(){
   const cart = getCart();
   if(cart.length === 0){
     container.innerHTML = `
-      <p class="cart-empty fr">Votre panier est vide.</p>
-      <p class="cart-empty en" style="display:none;">Your cart is empty.</p>
-      <a href="index.html" class="btn-outline fr" style="display:inline-block; margin-top:20px;">Continuer mes achats</a>
-      <a href="index.html" class="btn-outline en" style="display:none; margin-top:20px;">Continue shopping</a>
+      <div class="cart-empty-state">
+        <span class="cart-empty-icon">${CART_ICON_SVG}</span>
+        <p class="cart-empty fr">Votre panier est vide.</p>
+        <p class="cart-empty en" style="display:none;">Your cart is empty.</p>
+        <a href="shop.html" class="btn-outline fr" style="display:inline-block; margin-top:20px;">Continuer mes achats</a>
+        <a href="shop.html" class="btn-outline en" style="display:none; margin-top:20px;">Continue shopping</a>
+      </div>
     `;
     return;
   }
@@ -431,6 +444,7 @@ function renderCart(){
           <p class="cart-total fr">Total : ${formatPrice(total)}</p>
           <p class="cart-total en" style="display:none;">Total: ${formatPrice(total)}</p>
           <a id="cart-whatsapp-btn" class="whatsapp-btn" target="_blank" rel="noopener">
+            ${WHATSAPP_ICON_SVG}
             <span class="fr">Commander sur WhatsApp</span><span class="en" style="display:none;">Order on WhatsApp</span>
           </a>
         </div>
