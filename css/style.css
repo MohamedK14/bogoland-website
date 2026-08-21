@@ -500,4 +500,7 @@ footer li{ margin-bottom:10px; font-size:13px; color:rgba(247,241,230,0.75); }
   .collections{ grid-template-columns:1fr 1fr; }
   .valeurs-grid{ grid-template-columns:1fr; }
   .search-overlay{ padding:40px 16px 16px; }
+  .section{ padding-top:120px; }
+  .section-head{ margin-bottom:30px; }
+  .section-head .story-label{ margin-bottom:6px; }
 }
