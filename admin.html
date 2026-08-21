@@ -29,15 +29,73 @@
 
   <div id="admin-dashboard" style="display:none;">
     <div class="admin-dashboard-head">
-      <h2>Catégories</h2>
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="categories" type="button">Catégories</button>
+        <button class="admin-tab" data-tab="products" type="button">Produits</button>
+      </div>
       <button id="admin-logout" class="btn-outline" type="button">Déconnexion</button>
     </div>
-    <p class="admin-hint">Activez ou désactivez une catégorie pour la boutique. Le changement est immédiat sur le site.</p>
-    <div id="admin-categories-list"></div>
-    <p id="admin-error" class="cart-note" style="display:none; color:var(--clay);"></p>
+
+    <div id="admin-tab-categories" class="admin-panel">
+      <p class="admin-hint">Activez ou désactivez une catégorie pour la boutique. Le changement est immédiat sur le site.</p>
+      <div id="admin-categories-list"></div>
+      <p id="admin-error" class="cart-note" style="display:none; color:var(--clay);"></p>
+    </div>
+
+    <div id="admin-tab-products" class="admin-panel" style="display:none;">
+      <div class="admin-panel-head">
+        <p class="admin-hint" style="margin:0;">Ajoutez, modifiez ou supprimez des produits.</p>
+        <button id="admin-add-product" class="btn-outline" type="button">+ Ajouter un produit</button>
+      </div>
+      <div id="admin-products-list"></div>
+      <p id="admin-products-error" class="cart-note" style="display:none; color:var(--clay);"></p>
+    </div>
   </div>
 
 </section>
+
+<div id="product-modal-overlay" class="admin-modal-overlay" style="display:none;">
+  <div class="admin-modal">
+    <div class="admin-modal-head">
+      <h3 id="product-modal-title">Ajouter un produit</h3>
+      <button id="product-modal-close" class="admin-modal-close" type="button" aria-label="Fermer">✕</button>
+    </div>
+    <form id="product-form" class="contact-form">
+      <input type="hidden" id="product-id">
+      <div class="form-row">
+        <input type="text" id="product-name-fr" placeholder="Nom (français)" required>
+        <input type="text" id="product-name-en" placeholder="Name (English)" required>
+      </div>
+      <div class="form-row">
+        <select id="product-category" required></select>
+        <input type="number" id="product-price" placeholder="Prix (CFA)" min="0" required>
+      </div>
+      <textarea id="product-desc-fr" placeholder="Description (français)" required></textarea>
+      <textarea id="product-desc-en" placeholder="Description (English)" required></textarea>
+
+      <div class="admin-instock-row">
+        <span>En stock</span>
+        <label class="admin-switch">
+          <input type="checkbox" id="product-in-stock" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="admin-images-field">
+        <span class="admin-images-label">Images</span>
+        <div id="product-images-list" class="admin-images-list"></div>
+        <label class="btn-outline admin-upload-btn">
+          Ajouter une image
+          <input type="file" id="product-image-input" accept="image/*" style="display:none;">
+        </label>
+        <p id="product-upload-status" class="admin-hint" style="display:none;"></p>
+      </div>
+
+      <p id="product-form-error" class="cart-note" style="display:none; color:var(--clay);"></p>
+      <button type="submit" class="contact-submit">Enregistrer</button>
+    </form>
+  </div>
+</div>
 
 <script src="js/admin.js"></script>
 
