@@ -124,8 +124,14 @@ function productRowHTML(p){
         </div>
       </div>
       <div class="admin-row-actions">
-        <button type="button" class="admin-icon-btn admin-edit-product">Modifier</button>
-        <button type="button" class="admin-icon-btn danger admin-delete-product">Supprimer</button>
+        <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm admin-edit-product">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.121 2.121 0 0 0-3-3L5 17v3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          Modifier
+        </button>
+        <button type="button" class="admin-btn admin-btn-danger admin-btn-sm admin-delete-product">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Supprimer
+        </button>
       </div>
     </div>
   `;
@@ -188,7 +194,9 @@ function imageThumbHTML(url, index){
   return `
     <div class="admin-image-thumb" data-index="${index}">
       <img src="${url}" alt="">
-      <button type="button" class="admin-remove-image" data-index="${index}" aria-label="Retirer">✕</button>
+      <button type="button" class="admin-remove-image" data-index="${index}" aria-label="Retirer">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+      </button>
     </div>
   `;
 }
@@ -262,6 +270,7 @@ function uploadProductImage(file){
 
 document.getElementById('admin-add-product').addEventListener('click', () => openProductModal(null));
 document.getElementById('product-modal-close').addEventListener('click', closeProductModal);
+document.getElementById('product-form-cancel').addEventListener('click', closeProductModal);
 document.getElementById('product-modal-overlay').addEventListener('click', (e) => {
   if(e.target.id === 'product-modal-overlay'){ closeProductModal(); }
 });

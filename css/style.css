@@ -255,7 +255,9 @@ nav a.active::after{ width:100%; }
 .admin-dashboard-head h2{ font-size:28px; }
 .admin-hint{ font-size:13px; color:rgba(var(--ink-rgb),0.6); margin-bottom:24px; }
 .admin-row{ display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:14px 0; border-bottom:1px solid var(--line); }
+  padding:14px 10px; margin:0 -10px; border-bottom:1px solid var(--line); border-radius:4px;
+  transition:background .2s ease; }
+.admin-row:hover{ background:rgba(var(--ink-rgb),0.035); }
 .admin-row-info{ display:flex; align-items:center; gap:14px; }
 .admin-row-info img{ width:50px; height:65px; object-fit:cover; border-radius:2px; }
 .admin-row-info span{ font-family:'Fraunces'; font-style:italic; font-size:16px; }
@@ -269,18 +271,40 @@ nav a.active::after{ width:100%; }
 .admin-switch input:checked + .slider::before{ transform:translateX(20px); }
 
 .admin-tabs{ display:flex; gap:8px; }
-.admin-tab{ background:none; border:1px solid var(--line); padding:9px 20px; border-radius:2px;
-  font-size:12px; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; color:rgba(var(--ink-rgb),0.6); }
-.admin-tab.active{ background:var(--mudbrown); color:var(--ivory); border-color:var(--mudbrown); }
+.admin-tab{ background:none; border:1px solid var(--line); padding:9px 20px; border-radius:20px;
+  font-family:'Jost'; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;
+  color:rgba(var(--ink-rgb),0.6); transition:background .2s ease, color .2s ease, border-color .2s ease, transform .15s ease; }
+.admin-tab:hover{ border-color:var(--ink); }
+.admin-tab.active{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+.admin-tab:active{ transform:scale(0.95); }
 .admin-panel-head{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:12px; }
 
 .admin-row-actions{ display:flex; gap:10px; align-items:center; flex-shrink:0; }
 .admin-row-meta{ font-size:12px; color:rgba(var(--ink-rgb),0.5); margin-top:2px; }
-.admin-icon-btn{ background:none; border:1px solid var(--line); border-radius:2px; padding:7px 14px;
-  font-size:12px; letter-spacing:0.04em; text-transform:uppercase; cursor:pointer; color:var(--ink); }
-.admin-icon-btn:hover{ background:var(--mudbrown); color:var(--ivory); }
-.admin-icon-btn.danger{ color:var(--clay); border-color:var(--clay); }
-.admin-icon-btn.danger:hover{ background:var(--clay); color:var(--ivory); }
+
+/* Shared admin button system: one base + primary/ghost/danger/text variants,
+   used for every admin control (tabs use their own pill style above). */
+.admin-btn{ display:inline-flex; align-items:center; gap:7px; border-radius:4px; cursor:pointer;
+  font-family:'Jost'; font-weight:500; letter-spacing:0.03em; white-space:nowrap;
+  transition:background .2s ease, color .2s ease, border-color .2s ease, transform .15s ease, box-shadow .2s ease; }
+.admin-btn svg{ width:14px; height:14px; flex-shrink:0; }
+.admin-btn:active{ transform:scale(0.96); }
+
+.admin-btn-primary{ background:var(--ink); color:var(--bg); border:1px solid var(--ink); padding:12px 22px; font-size:13px; }
+.admin-btn-primary:hover{ background:var(--clay); border-color:var(--clay); transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(181,80,47,0.28); }
+
+.admin-btn-ghost{ background:none; color:var(--ink); border:1px solid var(--line); padding:8px 16px; font-size:12px; }
+.admin-btn-ghost:hover{ border-color:var(--ink); background:rgba(var(--ink-rgb),0.05); transform:translateY(-1px); }
+
+.admin-btn-danger{ background:none; color:var(--clay); border:1px solid var(--clay); padding:8px 16px; font-size:12px; }
+.admin-btn-danger:hover{ background:var(--clay); color:var(--ivory); transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(181,80,47,0.25); }
+
+.admin-btn-text{ background:none; color:rgba(var(--ink-rgb),0.65); border:none; padding:6px 4px; font-size:12px; }
+.admin-btn-text:hover{ color:var(--ink); }
+
+.admin-btn-sm{ padding:7px 13px; font-size:11.5px; }
 
 .admin-instock-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
 .admin-images-field{ display:flex; flex-direction:column; gap:12px; }
@@ -288,8 +312,11 @@ nav a.active::after{ width:100%; }
 .admin-images-list{ display:flex; flex-wrap:wrap; gap:10px; }
 .admin-image-thumb{ position:relative; width:70px; height:90px; border-radius:2px; overflow:hidden; }
 .admin-image-thumb img{ width:100%; height:100%; object-fit:cover; }
-.admin-image-thumb button{ position:absolute; top:2px; right:2px; width:20px; height:20px; border-radius:50%;
-  background:rgba(46,32,19,0.75); color:var(--ivory); border:none; font-size:11px; line-height:1; cursor:pointer; }
+.admin-image-thumb button{ position:absolute; top:3px; right:3px; width:20px; height:20px; border-radius:50%;
+  background:rgba(46,32,19,0.75); color:var(--ivory); border:none; font-size:11px; line-height:1; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .15s ease; }
+.admin-image-thumb button:hover{ background:var(--clay); transform:scale(1.12); }
+.admin-image-thumb button svg{ width:10px; height:10px; }
 .admin-upload-btn{ align-self:flex-start; cursor:pointer; }
 select#product-category{ width:100%; border:1px solid var(--line); border-radius:2px; padding:14px 16px;
   font-family:'Jost'; font-size:14px; color:var(--ink); background:var(--surface); }
@@ -299,7 +326,11 @@ select#product-category{ width:100%; border:1px solid var(--line); border-radius
 .admin-modal{ background:var(--surface); border-radius:4px; padding:36px; max-width:600px; width:100%;
   max-height:88vh; overflow-y:auto; }
 .admin-modal-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
-.admin-modal-close{ background:none; border:none; font-size:18px; cursor:pointer; color:var(--ink); }
+.admin-modal-close{ background:none; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer;
+  color:var(--ink); display:flex; align-items:center; justify-content:center; transition:background .2s ease; flex-shrink:0; }
+.admin-modal-close svg{ width:16px; height:16px; }
+.admin-modal-close:hover{ background:rgba(var(--ink-rgb),0.08); }
+.admin-modal-actions{ display:flex; justify-content:flex-end; gap:12px; margin-top:2px; }
 
 /* CART */
 .cart-empty{ text-align:center; color:rgba(var(--ink-rgb),0.6); }
