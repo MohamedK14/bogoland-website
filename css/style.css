@@ -135,7 +135,6 @@ nav a.active::after{ width:100%; }
 .col-card{ display:block; }
 .col-img{ position:relative; overflow:hidden; border-radius:2px; }
 .col-img .ph{ aspect-ratio:3/4; }
-.col-card.unavailable .col-img .ph{ filter:grayscale(1) brightness(0.6); }
 /* Label lives below the photo (like product cards) so it never fights the
    image for legibility, whatever the photo looks like. */
 .col-label{ display:block; text-align:center; padding-top:14px; color:var(--ink);
