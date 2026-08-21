@@ -215,11 +215,9 @@ function openProductModal(product){
   document.getElementById('product-modal-title').textContent = product ? 'Modifier le produit' : 'Ajouter un produit';
   document.getElementById('product-id').value = product ? product.id : '';
   document.getElementById('product-name-fr').value = product ? product.nameFr : '';
-  document.getElementById('product-name-en').value = product ? product.nameEn : '';
   document.getElementById('product-category').value = product ? product.category : '';
   document.getElementById('product-price').value = product ? product.price : '';
   document.getElementById('product-desc-fr').value = product ? product.descriptionFr : '';
-  document.getElementById('product-desc-en').value = product ? product.descriptionEn : '';
   document.getElementById('product-in-stock').checked = product ? product.inStock : true;
 
   document.getElementById('product-modal-overlay').style.display = 'flex';
@@ -280,13 +278,18 @@ document.getElementById('product-form').addEventListener('submit', (e) => {
   errorEl.style.display = 'none';
 
   const id = document.getElementById('product-id').value;
+  const nameFr = document.getElementById('product-name-fr').value;
+  const descriptionFr = document.getElementById('product-desc-fr').value;
+  // The admin form is French-only (less friction day-to-day). The storefront
+  // still has an EN toggle, so we mirror FR into the EN fields rather than
+  // leaving them blank — swap in real translations later if you want them.
   const payload = {
-    nameFr: document.getElementById('product-name-fr').value,
-    nameEn: document.getElementById('product-name-en').value,
+    nameFr,
+    nameEn: nameFr,
     category: document.getElementById('product-category').value,
     price: Number(document.getElementById('product-price').value),
-    descriptionFr: document.getElementById('product-desc-fr').value,
-    descriptionEn: document.getElementById('product-desc-en').value,
+    descriptionFr,
+    descriptionEn: descriptionFr,
     inStock: document.getElementById('product-in-stock').checked,
     images: workingImages,
   };
@@ -355,7 +358,12 @@ document.getElementById('admin-login-form').addEventListener('submit', (e) => {
     })
     .catch(err => {
       console.error(err);
-      errorEl.textContent = "E-mail ou mot de passe incorrect.";
+      // A network/CORS failure (server unreachable, or this origin not in
+      // ALLOWED_ORIGINS on the backend) throws a generic TypeError before we
+      // ever get a real response — don't show "wrong password" for that.
+      errorEl.textContent = err instanceof TypeError
+        ? "Impossible de contacter le serveur. Vérifiez votre connexion ou réessayez plus tard."
+        : "E-mail ou mot de passe incorrect.";
       errorEl.style.display = 'block';
     });
 });

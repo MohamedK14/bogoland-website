@@ -63,15 +63,11 @@
     <form id="product-form" class="contact-form">
       <input type="hidden" id="product-id">
       <div class="form-row">
-        <input type="text" id="product-name-fr" placeholder="Nom (français)" required>
-        <input type="text" id="product-name-en" placeholder="Name (English)" required>
-      </div>
-      <div class="form-row">
-        <select id="product-category" required></select>
+        <input type="text" id="product-name-fr" placeholder="Nom du produit" required>
         <input type="number" id="product-price" placeholder="Prix (CFA)" min="0" required>
       </div>
-      <textarea id="product-desc-fr" placeholder="Description (français)" required></textarea>
-      <textarea id="product-desc-en" placeholder="Description (English)" required></textarea>
+      <select id="product-category" required></select>
+      <textarea id="product-desc-fr" placeholder="Description" required></textarea>
 
       <div class="admin-instock-row">
         <span>En stock</span>
