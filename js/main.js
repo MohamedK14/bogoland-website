@@ -157,8 +157,8 @@ function productCardHTML(p){
       <div class="product-info">
         <h4 class="fr">${p.nameFr}</h4><h4 class="en" style="display:none;">${p.nameEn}</h4>
         <p class="price">${formatPrice(p.price)}</p>
-        <p class="stock fr">${p.inStock ? 'En stock' : 'Rupture de stock'}</p>
-        <p class="stock en" style="display:none;">${p.inStock ? 'In stock' : 'Out of stock'}</p>
+        <p class="stock fr ${p.inStock ? '' : 'out-of-stock'}">${p.inStock ? 'En stock' : 'Rupture de stock'}</p>
+        <p class="stock en ${p.inStock ? '' : 'out-of-stock'}" style="display:none;">${p.inStock ? 'In stock' : 'Out of stock'}</p>
       </div>
     </a>
   `;
@@ -309,8 +309,8 @@ function renderProductDetail(){
           <p class="detail-price">${formatPrice(product.price)}</p>
           <p class="detail-desc fr">${product.descriptionFr}</p>
           <p class="detail-desc en" style="display:none;">${product.descriptionEn}</p>
-          <p class="stock fr">${product.inStock ? 'En stock' : 'Rupture de stock'}</p>
-          <p class="stock en" style="display:none;">${product.inStock ? 'In stock' : 'Out of stock'}</p>
+          <p class="stock fr ${product.inStock ? '' : 'out-of-stock'}">${product.inStock ? 'En stock' : 'Rupture de stock'}</p>
+          <p class="stock en ${product.inStock ? '' : 'out-of-stock'}" style="display:none;">${product.inStock ? 'In stock' : 'Out of stock'}</p>
 
           <div class="detail-qty">
             <label class="fr" for="qty-input">Quantité</label>
