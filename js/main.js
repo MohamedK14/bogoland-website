@@ -148,8 +148,10 @@ function categoryCardHTML(c){
     : '<span class="col-unavailable-badge fr">Indisponible</span><span class="col-unavailable-badge en" style="display:none;">Unavailable</span>';
   return `
     <div class="col-card ${c.available ? '' : 'unavailable'}">
-      <div class="ph" style="height:100%; background-image:url('${c.image}');"></div>
-      ${badge}
+      <div class="col-img">
+        <div class="ph" style="height:100%; background-image:url('${c.image}');"></div>
+        ${badge}
+      </div>
       <div class="col-label fr">${c.nameFr}</div><div class="col-label en" style="display:none;">${c.nameEn}</div>
     </div>
   `;
