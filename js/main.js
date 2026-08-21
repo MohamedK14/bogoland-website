@@ -13,6 +13,82 @@ const PLUS_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><
 const MINUS_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
 const X_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
 
+// --- SEARCH ---
+// One overlay per page (markup lives right before </body>), opened from the
+// 🔍 icon in the header. Products are fetched once per page load and
+// filtered client-side — the catalog is small enough that this stays instant.
+let searchProductsCache = null;
+
+function getAllProductsForSearch(){
+  if(searchProductsCache) return Promise.resolve(searchProductsCache);
+  return fetch(`${API_BASE}/api/products`)
+    .then(res => res.json())
+    .then(products => { searchProductsCache = products; return products; });
+}
+
+function searchResultHTML(p){
+  return `
+    <a class="search-result-item" href="product.html?id=${p.id}">
+      <img src="${p.image || ''}" alt="${p.nameFr}">
+      <div class="search-result-info">
+        <span class="search-result-name">${p.nameFr}</span>
+        <span class="search-result-meta">${p.category} — ${formatPrice(p.price)}</span>
+      </div>
+    </a>
+  `;
+}
+
+function renderSearchResults(query, products){
+  const resultsEl = document.getElementById('search-results');
+  if(!resultsEl) return;
+
+  const trimmed = query.trim().toLowerCase();
+  if(!trimmed){
+    resultsEl.innerHTML = '<p class="search-hint">Tapez pour rechercher un produit...</p>';
+    return;
+  }
+
+  const matches = products.filter(p => p.nameFr.toLowerCase().includes(trimmed));
+  resultsEl.innerHTML = matches.length
+    ? matches.map(searchResultHTML).join('')
+    : '<p class="search-empty">Aucun produit trouvé.</p>';
+}
+
+function openSearch(){
+  const overlay = document.getElementById('search-overlay');
+  const input = document.getElementById('search-input');
+  if(!overlay || !input) return;
+
+  overlay.style.display = 'flex';
+  input.value = '';
+  renderSearchResults('', []);
+  input.focus();
+
+  getAllProductsForSearch().then(products => {
+    renderSearchResults(input.value, products);
+    input.oninput = () => renderSearchResults(input.value, products);
+  });
+}
+
+function closeSearch(){
+  const overlay = document.getElementById('search-overlay');
+  if(overlay) overlay.style.display = 'none';
+}
+
+function initSearch(){
+  const trigger = document.getElementById('search-trigger');
+  const overlay = document.getElementById('search-overlay');
+  const closeBtn = document.getElementById('search-close');
+  if(!trigger || !overlay || !closeBtn) return;
+
+  trigger.addEventListener('click', openSearch);
+  closeBtn.addEventListener('click', closeSearch);
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) closeSearch(); });
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && overlay.style.display !== 'none') closeSearch();
+  });
+}
+
 // Fire-and-forget: increments a product's click_count server-side so the
 // (future) "Meilleures ventes" section can sort by real interest. Never
 // blocks the WhatsApp link itself if the backend is asleep/unreachable.
@@ -488,6 +564,7 @@ function renderCart(){
 
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
+  initSearch();
   renderProducts();
   renderCategories();
   renderShop();
