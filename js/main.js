@@ -220,6 +220,7 @@ function renderShop(){
 
   const filtersEl = document.getElementById('shop-filters');
   const emptyEl = document.getElementById('shop-empty');
+  const titleEl = document.getElementById('shop-title');
 
   Promise.all([
     fetch(`${API_BASE}/api/products`).then(res => res.json()),
@@ -235,6 +236,9 @@ function renderShop(){
         const filtered = activeCategory ? products.filter(p => p.category === activeCategory) : products;
         grid.innerHTML = filtered.map(productCardHTML).join('');
         emptyEl.style.display = filtered.length === 0 ? 'block' : 'none';
+        // Heading reflects the actual selection, so "Tous" and "Toute la
+        // boutique" aren't just saying the same thing twice on screen.
+        if(titleEl) titleEl.textContent = activeCategory || 'Toute la boutique';
 
         filtersEl.querySelectorAll('.filter-pill').forEach(btn => {
           btn.addEventListener('click', () => {
