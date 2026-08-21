@@ -178,7 +178,7 @@ nav a.active::after{ width:100%; }
 .col-unavailable-badge{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
   background:var(--clay); color:var(--ivory); padding:9px 20px; border-radius:20px;
   font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; z-index:2; }
-.voir-boutique{ text-align:center; margin-top:40px; }
+.voir-boutique{ text-align:center; margin-top:40px; margin-bottom:24px; }
 
 /* SHOP FILTERS */
 .shop-filters{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:44px; }
