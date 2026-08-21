@@ -7,6 +7,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<script>
+// Apply saved/system theme before first paint, so there's no flash of the
+// wrong theme while js/main.js is still loading.
+(function(){
+  try{
+    var t = localStorage.getItem('bogoland_theme');
+    if(t !== 'light' && t !== 'dark'){
+      t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 
@@ -24,10 +37,29 @@
       </ul>
     </nav>
     <div class="header-icons">
-      <div class="lang-toggle">
-        <button class="active" onclick="setLang('fr',this)">FR</button>
-        <button onclick="setLang('en',this)">EN</button>
-      </div>
+      <button class="theme-toggle" type="button" aria-label="Basculer entre mode jour et mode nuit" aria-pressed="false">
+        <span class="theme-toggle-track">
+          <span class="theme-toggle-stars"><i></i><i></i><i></i></span>
+          <span class="theme-toggle-knob">
+            <span class="icon icon-sun">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="12" cy="12" r="5" fill="currentColor"/>
+                <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/>
+                  <line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/>
+                  <line x1="4.2" y1="4.2" x2="6" y2="6"/><line x1="18" y1="18" x2="19.8" y2="19.8"/>
+                  <line x1="4.2" y1="19.8" x2="6" y2="18"/><line x1="18" y1="6" x2="19.8" y2="4.2"/>
+                </g>
+              </svg>
+            </span>
+            <span class="icon icon-moon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" fill="currentColor"/>
+              </svg>
+            </span>
+          </span>
+        </span>
+      </button>
       <span>🔍</span><span>👤</span>
       <a href="cart.html" class="cart-link" aria-label="Panier">🛍️<span id="cart-badge" class="cart-badge"></span></a>
       <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>

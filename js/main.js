@@ -12,6 +12,37 @@ function trackProductClick(productId){
   fetch(`${API_BASE}/api/products/${productId}/click`, { method: 'POST' }).catch(() => {});
 }
 
+// --- DAY/NIGHT THEME TOGGLE ---
+// The site is French-only now (no more FR/EN switch), so that header slot
+// became a light/dark theme toggle instead. A tiny inline script in each
+// page's <head> already applies the saved/system theme before first paint
+// (avoids a flash of the wrong theme) — this just wires up the click.
+const THEME_KEY = 'bogoland_theme';
+
+function getPreferredTheme(){
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    if(saved === 'light' || saved === 'dark') return saved;
+  } catch(e){}
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('.theme-toggle').forEach(btn => btn.setAttribute('aria-pressed', theme === 'dark'));
+}
+
+function initTheme(){
+  applyTheme(getPreferredTheme());
+  document.querySelectorAll('.theme-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem(THEME_KEY, next); } catch(e){}
+      applyTheme(next);
+    });
+  });
+}
+
 function setLang(lang, btn){
   document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
@@ -391,6 +422,7 @@ function renderCart(){
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   renderProducts();
   renderCategories();
   renderProductDetail();
