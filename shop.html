@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BOGOLAND — Contact</title>
+<title>BOGOLAND — Boutique</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -33,7 +33,7 @@
         <li><a href="shop.html?category=Ensembles" class="fr">Ensembles</a><a href="shop.html?category=Ensembles" class="en">Sets</a></li>
         <li><a href="shop.html?category=Voiles" class="fr">Voiles</a><a href="shop.html?category=Voiles" class="en">Veils</a></li>
         <li><a href="shop.html?category=Pants%20Pagne" class="fr">Pants Pagne</a><a href="shop.html?category=Pants%20Pagne" class="en">Pants Pagne</a></li>
-        <li><a href="contact.html" class="fr active">Contact</a><a href="contact.html" class="en active">Contact</a></li>
+        <li><a href="contact.html" class="fr">Contact</a><a href="contact.html" class="en">Contact</a></li>
       </ul>
     </nav>
     <div class="header-icons">
@@ -69,22 +69,20 @@
 
 <div class="pattern-strip"></div>
 
-<section class="contact-section wrap">
+<section class="section wrap">
   <div class="section-head">
-    <span class="story-label fr">Nous contacter</span><span class="story-label en" style="display:none;">Get in touch</span>
-    <h2 class="fr">Contact</h2><h2 class="en" style="display:none;">Contact</h2>
+    <span class="story-label fr">Boutique</span><span class="story-label en" style="display:none;">Shop</span>
+    <h2 class="fr">Toute la boutique</h2><h2 class="en" style="display:none;">All Products</h2>
   </div>
-  <form class="contact-form" onsubmit="return false;">
-    <div class="form-row">
-      <input type="text" data-fr="Nom" data-en="Name" placeholder="Nom" required>
-      <input type="email" data-fr="E-mail" data-en="Email" placeholder="E-mail" required>
-    </div>
-    <input type="tel" data-fr="Téléphone" data-en="Phone" placeholder="Téléphone">
-    <textarea rows="8" data-fr="Commentaire" data-en="Comment" placeholder="Commentaire"></textarea>
-    <button type="submit" class="contact-submit" data-fr="Envoyer" data-en="Submit">Envoyer</button>
-  </form>
-  <p class="contact-note fr">Ce formulaire est une maquette pour l'instant — l'envoi sera activé une fois le site connecté.</p>
-  <p class="contact-note en" style="display:none;">This form is a mockup for now — sending will be enabled once the site is connected.</p>
+
+  <div id="shop-filters" class="shop-filters">
+    <!-- Rendered at runtime by renderShop() in js/main.js -->
+  </div>
+
+  <div class="products-grid" id="shop-products-grid">
+    <!-- Rendered at runtime by renderShop() in js/main.js -->
+  </div>
+  <p id="shop-empty" class="cart-empty" style="display:none;">Aucun produit dans cette catégorie pour le moment.</p>
 </section>
 
 <footer>

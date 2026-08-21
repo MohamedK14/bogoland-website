@@ -178,13 +178,13 @@ function categoryCardHTML(c){
     ? ''
     : '<span class="col-unavailable-badge fr">Indisponible</span><span class="col-unavailable-badge en" style="display:none;">Unavailable</span>';
   return `
-    <div class="col-card ${c.available ? '' : 'unavailable'}">
+    <a class="col-card ${c.available ? '' : 'unavailable'}" href="shop.html?category=${encodeURIComponent(c.nameFr)}">
       <div class="col-img">
         <div class="ph" style="height:100%; background-image:url('${c.image}');"></div>
         ${badge}
       </div>
       <div class="col-label fr">${c.nameFr}</div><div class="col-label en" style="display:none;">${c.nameEn}</div>
-    </div>
+    </a>
   `;
 }
 
@@ -203,6 +203,53 @@ function renderCategories(){
     })
     .catch(err => {
       console.error('Could not load categories from API', err);
+    });
+}
+
+function filterPillHTML(label, value, activeValue){
+  return `<button type="button" class="filter-pill ${value === activeValue ? 'active' : ''}" data-category="${value}">${label}</button>`;
+}
+
+// Renders the boutique page (#shop-products-grid), if present — only
+// shop.html has one. Supports filtering by category via ?category=<nameFr>,
+// with clickable pills that update the URL (no reload) — this is also
+// where "Nos Collections" cards and the category nav links land.
+function renderShop(){
+  const grid = document.getElementById('shop-products-grid');
+  if(!grid) return;
+
+  const filtersEl = document.getElementById('shop-filters');
+  const emptyEl = document.getElementById('shop-empty');
+
+  Promise.all([
+    fetch(`${API_BASE}/api/products`).then(res => res.json()),
+    fetch(`${API_BASE}/api/categories`).then(res => res.json()),
+  ])
+    .then(([products, categories]) => {
+      const renderForCategory = (activeCategory) => {
+        filtersEl.innerHTML = [
+          filterPillHTML('Tous', '', activeCategory),
+          ...categories.map(c => filterPillHTML(c.nameFr, c.nameFr, activeCategory)),
+        ].join('');
+
+        const filtered = activeCategory ? products.filter(p => p.category === activeCategory) : products;
+        grid.innerHTML = filtered.map(productCardHTML).join('');
+        emptyEl.style.display = filtered.length === 0 ? 'block' : 'none';
+
+        filtersEl.querySelectorAll('.filter-pill').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const cat = btn.dataset.category;
+            history.pushState(null, '', cat ? `shop.html?category=${encodeURIComponent(cat)}` : 'shop.html');
+            renderForCategory(cat);
+          });
+        });
+      };
+
+      renderForCategory(getQueryParam('category') || '');
+    })
+    .catch(err => {
+      console.error('Could not load shop from API', err);
+      grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:rgba(46,32,19,0.5);">Produits indisponibles pour le moment.</p>';
     });
 }
 
@@ -425,6 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   renderProducts();
   renderCategories();
+  renderShop();
   renderProductDetail();
   renderCart();
   updateCartBadge();
