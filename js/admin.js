@@ -21,6 +21,7 @@ function showDashboard(){
   document.getElementById('admin-dashboard').style.display = 'block';
   loadCategories();
   loadProducts();
+  loadCustomers();
 }
 
 function showLogin(){
@@ -333,6 +334,98 @@ document.getElementById('product-form').addEventListener('submit', (e) => {
       errorEl.style.display = 'block';
     });
 });
+
+// --- CUSTOMERS TAB (password reset when someone forgets theirs) ---
+
+function generateTempPassword(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+  let pw = '';
+  for(let i = 0; i < 8; i++){
+    pw += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return pw;
+}
+
+function customerRowHTML(c){
+  const date = new Date(c.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  return `
+    <div class="admin-row" data-id="${c.id}">
+      <div class="admin-row-info">
+        <div>
+          <span>${c.name}</span>
+          <div class="admin-row-meta">${c.email} — ${c.phone || 'pas de téléphone'} — inscrite le ${date}</div>
+        </div>
+      </div>
+      <div class="admin-row-actions">
+        <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm admin-reset-password">Réinitialiser le mot de passe</button>
+      </div>
+    </div>
+    <p class="admin-reset-result cart-note" id="reset-result-${c.id}" style="display:none; color:var(--clay);"></p>
+  `;
+}
+
+function loadCustomers(){
+  const errorEl = document.getElementById('admin-customers-error');
+  errorEl.style.display = 'none';
+
+  fetch(`${API_BASE}/api/admin/customers`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` },
+  })
+    .then(res => {
+      if(res.status === 401){
+        clearToken();
+        showLogin();
+        throw new Error('Session expirée, reconnectez-vous.');
+      }
+      return res.json();
+    })
+    .then(customers => {
+      const list = document.getElementById('admin-customers-list');
+      list.innerHTML = customers.length
+        ? customers.map(customerRowHTML).join('')
+        : '<p class="admin-hint">Aucun client inscrit pour le moment.</p>';
+
+      list.querySelectorAll('.admin-reset-password').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.closest('.admin-row').dataset.id;
+          resetCustomerPassword(id, btn);
+        });
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      errorEl.textContent = "Impossible de charger les clients.";
+      errorEl.style.display = 'block';
+    });
+}
+
+function resetCustomerPassword(id, btn){
+  if(!confirm('Générer un nouveau mot de passe pour cette cliente ?')) return;
+
+  const newPassword = generateTempPassword();
+  btn.disabled = true;
+
+  fetch(`${API_BASE}/api/admin/customers/${id}/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+    body: JSON.stringify({ newPassword }),
+  })
+    .then(res => {
+      if(!res.ok){ throw new Error('failed'); }
+      return res.json();
+    })
+    .then(() => {
+      const resultEl = document.getElementById(`reset-result-${id}`);
+      resultEl.textContent = `Nouveau mot de passe : ${newPassword} — à communiquer à la cliente.`;
+      resultEl.style.display = 'block';
+    })
+    .catch(() => {
+      alert("La réinitialisation a échoué.");
+    })
+    .finally(() => {
+      btn.disabled = false;
+    });
+}
 
 // --- TABS ---
 
