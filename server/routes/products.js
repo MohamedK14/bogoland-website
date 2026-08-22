@@ -50,7 +50,7 @@ router.post('/:id/click', async (req, res) => {
 
 // POST /api/products — admin only
 router.post('/', requireAdmin, async (req, res) => {
-  const { nameFr, nameEn, category, price, images, descriptionFr, descriptionEn, inStock } = req.body || {};
+  const { nameFr, nameEn, category, price, images, descriptionFr, descriptionEn, inStock, sizes } = req.body || {};
 
   if(!nameFr || !nameEn || !category || price == null){
     return res.status(400).json({ error: 'nameFr, nameEn, category, and price are required' });
@@ -58,9 +58,9 @@ router.post('/', requireAdmin, async (req, res) => {
 
   try {
     const result = await pool.query(
-      `INSERT INTO products (name_fr, name_en, category, price, images, description_fr, description_en, in_stock)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
-      [nameFr, nameEn, category, price, images || [], descriptionFr || '', descriptionEn || '', inStock !== false]
+      `INSERT INTO products (name_fr, name_en, category, price, images, description_fr, description_en, in_stock, sizes)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+      [nameFr, nameEn, category, price, images || [], descriptionFr || '', descriptionEn || '', inStock !== false, sizes || []]
     );
     res.status(201).json(rowToProduct(result.rows[0]));
   } catch(err){
@@ -71,7 +71,7 @@ router.post('/', requireAdmin, async (req, res) => {
 
 // PUT /api/products/:id — admin only
 router.put('/:id', requireAdmin, async (req, res) => {
-  const { nameFr, nameEn, category, price, images, descriptionFr, descriptionEn, inStock } = req.body || {};
+  const { nameFr, nameEn, category, price, images, descriptionFr, descriptionEn, inStock, sizes } = req.body || {};
 
   try {
     const result = await pool.query(
@@ -83,9 +83,10 @@ router.put('/:id', requireAdmin, async (req, res) => {
          images = COALESCE($5, images),
          description_fr = COALESCE($6, description_fr),
          description_en = COALESCE($7, description_en),
-         in_stock = COALESCE($8, in_stock)
-       WHERE id = $9 RETURNING *`,
-      [nameFr, nameEn, category, price, images, descriptionFr, descriptionEn, inStock, req.params.id]
+         in_stock = COALESCE($8, in_stock),
+         sizes = COALESCE($9, sizes)
+       WHERE id = $10 RETURNING *`,
+      [nameFr, nameEn, category, price, images, descriptionFr, descriptionEn, inStock, sizes, req.params.id]
     );
     if(result.rows.length === 0){
       return res.status(404).json({ error: 'Product not found' });

@@ -8,6 +8,7 @@ const adminRouter = require('./routes/admin');
 const uploadRouter = require('./routes/upload');
 const authRouter = require('./routes/auth');
 const ordersRouter = require('./routes/orders');
+const reviewsRouter = require('./routes/reviews');
 
 const app = express();
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -27,6 +28,7 @@ app.use('/api/admin', adminRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/orders', ordersRouter);
+app.use('/api/reviews', reviewsRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

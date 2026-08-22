@@ -19,6 +19,18 @@ function rowToProduct(row){
       : row.date_added,
     inStock: row.in_stock,
     clickCount: row.click_count,
+    sizes: row.sizes || [],
+  };
+}
+
+function rowToReview(row){
+  return {
+    id: row.id,
+    name: row.name,
+    rating: row.rating,
+    message: row.message,
+    approved: row.approved,
+    createdAt: row.created_at,
   };
 }
 
@@ -44,4 +56,4 @@ function rowToCustomer(row){
   };
 }
 
-module.exports = { rowToProduct, rowToCategory, rowToCustomer };
+module.exports = { rowToProduct, rowToCategory, rowToCustomer, rowToReview };

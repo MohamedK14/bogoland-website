@@ -26,9 +26,9 @@ router.post('/', requireCustomer, async (req, res) => {
 
     for(const item of items){
       await client.query(
-        `INSERT INTO order_items (order_id, product_id, name_fr, price, qty, image)
-         VALUES ($1,$2,$3,$4,$5,$6)`,
-        [order.id, item.productId || null, item.nameFr, item.price, item.qty, item.image || '']
+        `INSERT INTO order_items (order_id, product_id, name_fr, price, qty, image, size)
+         VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+        [order.id, item.productId || null, item.nameFr, item.price, item.qty, item.image || '', item.size || '']
       );
     }
 
@@ -71,6 +71,7 @@ router.get('/', requireCustomer, async (req, res) => {
         price: item.price,
         qty: item.qty,
         image: item.image,
+        size: item.size,
       });
     }
 

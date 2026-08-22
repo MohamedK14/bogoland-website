@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pool = require('../db');
 const { requireAdmin } = require('../authMiddleware');
+const { rowToReview } = require('../mappers');
 
 const router = express.Router();
 
@@ -69,6 +70,51 @@ router.post('/customers/:id/reset-password', requireAdmin, async (req, res) => {
   } catch(err){
     console.error(err);
     res.status(500).json({ error: 'Could not reset password' });
+  }
+});
+
+// GET /api/admin/reviews — admin only. Everything (pending + approved),
+// newest first, so the admin can moderate what goes public.
+router.get('/reviews', requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM reviews ORDER BY created_at DESC');
+    res.json(result.rows.map(rowToReview));
+  } catch(err){
+    console.error(err);
+    res.status(500).json({ error: 'Could not fetch reviews' });
+  }
+});
+
+// PUT /api/admin/reviews/:id — admin only. Body: { approved: true|false }.
+router.put('/reviews/:id', requireAdmin, async (req, res) => {
+  const { approved } = req.body || {};
+
+  try {
+    const result = await pool.query(
+      'UPDATE reviews SET approved = $1 WHERE id = $2 RETURNING *',
+      [approved === true, req.params.id]
+    );
+    if(result.rows.length === 0){
+      return res.status(404).json({ error: 'Review not found' });
+    }
+    res.json(rowToReview(result.rows[0]));
+  } catch(err){
+    console.error(err);
+    res.status(500).json({ error: 'Could not update review' });
+  }
+});
+
+// DELETE /api/admin/reviews/:id — admin only. For rejecting/removing one entirely.
+router.delete('/reviews/:id', requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query('DELETE FROM reviews WHERE id = $1 RETURNING id', [req.params.id]);
+    if(result.rows.length === 0){
+      return res.status(404).json({ error: 'Review not found' });
+    }
+    res.json({ deleted: true });
+  } catch(err){
+    console.error(err);
+    res.status(500).json({ error: 'Could not delete review' });
   }
 });
 

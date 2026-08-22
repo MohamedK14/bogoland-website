@@ -53,5 +53,22 @@ CREATE TABLE IF NOT EXISTS order_items (
   name_fr    TEXT NOT NULL,
   price      INTEGER NOT NULL,
   qty        INTEGER NOT NULL,
-  image      TEXT NOT NULL DEFAULT ''
+  image      TEXT NOT NULL DEFAULT '',
+  size       TEXT NOT NULL DEFAULT ''
 );
+
+-- Customer-submitted reviews. Nothing shows on the site until an admin
+-- approves it — this table is the moderation queue and the published set
+-- at the same time (approved = true is what the public GET returns).
+CREATE TABLE IF NOT EXISTS reviews (
+  id         SERIAL PRIMARY KEY,
+  name       TEXT NOT NULL,
+  rating     INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  message    TEXT NOT NULL,
+  approved   BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Per-product available sizes, e.g. '{XS,S,M,L,Standard}'. Empty means the
+-- product doesn't use sizes (no picker shown on the product page).
+ALTER TABLE products ADD COLUMN IF NOT EXISTS sizes TEXT[] NOT NULL DEFAULT '{}';
