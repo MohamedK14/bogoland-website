@@ -709,15 +709,15 @@ function renderProductDetail(){
           <div class="detail-qty">
             <label class="fr" for="qty-input">Quantité</label>
             <label class="en" for="qty-input" style="display:none;">Quantity</label>
-            <input type="number" id="qty-input" value="1" min="1">
+            <input type="number" id="qty-input" value="1" min="1" ${product.inStock ? '' : 'disabled'}>
           </div>
 
           <div class="detail-actions">
-            <a id="whatsapp-btn" class="whatsapp-btn" target="_blank" rel="noopener">
+            <a id="whatsapp-btn" class="whatsapp-btn ${product.inStock ? '' : 'disabled'}" ${product.inStock ? 'target="_blank" rel="noopener"' : 'aria-disabled="true"'}>
               ${WHATSAPP_ICON_SVG}
-              <span class="fr">Commander sur WhatsApp</span><span class="en" style="display:none;">Order on WhatsApp</span>
+              <span class="fr">${product.inStock ? 'Commander sur WhatsApp' : 'Indisponible'}</span><span class="en" style="display:none;">${product.inStock ? 'Order on WhatsApp' : 'Unavailable'}</span>
             </a>
-            <button id="cart-btn" class="cart-btn" type="button">
+            <button id="cart-btn" class="cart-btn" type="button" ${product.inStock ? '' : 'disabled'}>
               ${CART_ICON_SVG}
               <span class="fr">Ajouter au panier</span><span class="en" style="display:none;">Add to cart</span>
             </button>
@@ -771,6 +771,7 @@ function renderProductDetail(){
       const qtyInput = document.getElementById('qty-input');
       const whatsappBtn = document.getElementById('whatsapp-btn');
       const updateWhatsAppLink = () => {
+        if(!product.inStock) return; // no link at all for an out-of-stock item
         const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
         const currentLang = document.documentElement.getAttribute('data-lang') || 'fr';
         whatsappBtn.href = buildWhatsAppLink(product, qty, currentLang, selectedSize);
@@ -781,13 +782,15 @@ function renderProductDetail(){
 
       const cartBtn = document.getElementById('cart-btn');
       cartBtn.addEventListener('click', () => {
+        if(!product.inStock) return;
         const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
         addToCart(product.id, qty, selectedSize);
         document.getElementById('cart-note').style.display = document.documentElement.getAttribute('data-lang') === 'fr' ? 'block' : 'none';
         document.getElementById('cart-note-en').style.display = document.documentElement.getAttribute('data-lang') === 'en' ? 'block' : 'none';
       });
 
-      whatsappBtn.addEventListener('click', () => {
+      whatsappBtn.addEventListener('click', (e) => {
+        if(!product.inStock){ e.preventDefault(); return; }
         trackProductClick(product.id);
         const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
         recordOrder([{ product, qty, size: selectedSize }], product.price * qty);
