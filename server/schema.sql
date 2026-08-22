@@ -53,9 +53,12 @@ CREATE TABLE IF NOT EXISTS order_items (
   name_fr    TEXT NOT NULL,
   price      INTEGER NOT NULL,
   qty        INTEGER NOT NULL,
-  image      TEXT NOT NULL DEFAULT '',
-  size       TEXT NOT NULL DEFAULT ''
+  image      TEXT NOT NULL DEFAULT ''
 );
+-- Added after order_items already existed in production — CREATE TABLE IF
+-- NOT EXISTS above silently skips new columns on an existing table, so this
+-- needs its own explicit ALTER (same reason products.sizes below is one too).
+ALTER TABLE order_items ADD COLUMN IF NOT EXISTS size TEXT NOT NULL DEFAULT '';
 
 -- Customer-submitted reviews. Nothing shows on the site until an admin
 -- approves it — this table is the moderation queue and the published set
