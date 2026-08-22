@@ -373,10 +373,16 @@ function productCardHTML(p){
   const badge = isNewArrival(p)
     ? '<span class="product-badge fr">Nouveau</span><span class="product-badge en" style="display:none;">New</span>'
     : '';
+  // Quick-add only makes sense when there's no size to choose first, and
+  // only for items actually in stock.
+  const quickAdd = (!p.sizes || p.sizes.length === 0) && p.inStock
+    ? `<button type="button" class="quick-add-btn" data-id="${p.id}" aria-label="Ajouter au panier">${PLUS_ICON_SVG}</button>`
+    : '';
   return `
     <a class="product-card" href="product.html?id=${p.id}">
       <div class="img-wrap">
         ${badge}
+        ${quickAdd}
         <img class="base-img" src="${p.image}" alt="${p.nameFr}">
         <img class="hover-img" src="${p.hoverImage}" alt="${p.nameFr} - vue 2">
       </div>
@@ -390,6 +396,21 @@ function productCardHTML(p){
   `;
 }
 
+// Wires the quick-add button on any grid of product cards just rendered.
+// Adding qty 1 (no size — quick-add only ever appears on sizeless items)
+// and blocks the card's own link from firing so it doesn't also navigate.
+function wireQuickAddButtons(container){
+  container.querySelectorAll('.quick-add-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      addToCart(Number(btn.dataset.id), 1, '');
+      btn.classList.add('added');
+      setTimeout(() => btn.classList.remove('added'), 900);
+    });
+  });
+}
+
 // Renders product cards from the live API into #products-grid, if that
 // container exists on the current page (only index.html has one).
 function renderProducts(){
@@ -400,9 +421,33 @@ function renderProducts(){
     .then(res => res.json())
     .then(products => {
       grid.innerHTML = products.map(productCardHTML).join('');
+      wireQuickAddButtons(grid);
     })
     .catch(err => {
       console.error('Could not load products from API', err);
+      grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:rgba(46,32,19,0.5);">Produits indisponibles pour le moment.</p>';
+    });
+}
+
+// Renders the "Meilleures ventes" section (#best-sellers-grid), if present
+// — only index.html has one. Sorted by click_count (incremented every time
+// someone taps "Commander sur WhatsApp") — the closest real signal of
+// interest we have without full order tracking.
+function renderBestSellers(){
+  const grid = document.getElementById('best-sellers-grid');
+  if(!grid) return;
+
+  fetch(`${API_BASE}/api/products`)
+    .then(res => res.json())
+    .then(products => {
+      const topSellers = [...products]
+        .sort((a, b) => (b.clickCount || 0) - (a.clickCount || 0))
+        .slice(0, 4);
+      grid.innerHTML = topSellers.map(productCardHTML).join('');
+      wireQuickAddButtons(grid);
+    })
+    .catch(err => {
+      console.error('Could not load best sellers from API', err);
       grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:rgba(46,32,19,0.5);">Produits indisponibles pour le moment.</p>';
     });
 }
@@ -584,6 +629,7 @@ function renderShop(){
 
         const filtered = activeCategory ? products.filter(p => p.category === activeCategory) : products;
         grid.innerHTML = filtered.map(productCardHTML).join('');
+        wireQuickAddButtons(grid);
         emptyEl.style.display = filtered.length === 0 ? 'block' : 'none';
         // Heading reflects the actual selection, so "Tous" and "Toute la
         // boutique" aren't just saying the same thing twice on screen.
@@ -768,7 +814,9 @@ function renderSimilarProducts(allProducts, current){
     return;
   }
 
-  section.querySelector('.products-grid').innerHTML = similar.map(productCardHTML).join('');
+  const similarGrid = section.querySelector('.products-grid');
+  similarGrid.innerHTML = similar.map(productCardHTML).join('');
+  wireQuickAddButtons(similarGrid);
 }
 
 function cartItemHTML(product, qty, size){
@@ -878,6 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSearch();
   initHeroStory();
   renderProducts();
+  renderBestSellers();
   renderCategories();
   renderShop();
   renderProductDetail();
