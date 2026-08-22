@@ -22,6 +22,7 @@ function showDashboard(){
   loadCategories();
   loadProducts();
   loadCustomers();
+  loadReviews();
 }
 
 function showLogin(){
@@ -424,6 +425,97 @@ function resetCustomerPassword(id, btn){
     })
     .finally(() => {
       btn.disabled = false;
+    });
+}
+
+// --- REVIEWS TAB (Avis moderation) ---
+
+function reviewRowHTML(r){
+  const date = new Date(r.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+  return `
+    <div class="admin-row" data-id="${r.id}" style="align-items:flex-start;">
+      <div class="admin-row-info">
+        <div>
+          <span>${r.name}</span>
+          <div class="admin-row-meta">${stars} — ${date} — ${r.approved ? 'Publié' : 'En attente'}</div>
+          <div class="admin-row-meta" style="margin-top:6px; max-width:480px;">"${r.message}"</div>
+        </div>
+      </div>
+      <div class="admin-row-actions">
+        <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm admin-review-toggle">
+          ${r.approved ? 'Dépublier' : 'Publier'}
+        </button>
+        <button type="button" class="admin-btn admin-btn-danger admin-btn-sm admin-review-delete">Supprimer</button>
+      </div>
+    </div>
+  `;
+}
+
+function loadReviews(){
+  const errorEl = document.getElementById('admin-reviews-error');
+  errorEl.style.display = 'none';
+
+  fetch(`${API_BASE}/api/admin/reviews`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` },
+  })
+    .then(res => {
+      if(res.status === 401){
+        clearToken();
+        showLogin();
+        throw new Error('Session expirée, reconnectez-vous.');
+      }
+      return res.json();
+    })
+    .then(reviews => {
+      const list = document.getElementById('admin-reviews-list');
+      list.innerHTML = reviews.length
+        ? reviews.map(reviewRowHTML).join('')
+        : '<p class="admin-hint">Aucun avis pour le moment.</p>';
+
+      list.querySelectorAll('.admin-row').forEach(row => {
+        const id = row.dataset.id;
+        const review = reviews.find(r => String(r.id) === id);
+        row.querySelector('.admin-review-toggle').addEventListener('click', () => {
+          toggleReviewApproval(id, !review.approved);
+        });
+        row.querySelector('.admin-review-delete').addEventListener('click', () => {
+          deleteReview(id);
+        });
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      errorEl.textContent = "Impossible de charger les avis.";
+      errorEl.style.display = 'block';
+    });
+}
+
+function toggleReviewApproval(id, approved){
+  fetch(`${API_BASE}/api/admin/reviews/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+    body: JSON.stringify({ approved }),
+  })
+    .then(res => { if(!res.ok){ throw new Error('failed'); } return res.json(); })
+    .then(() => loadReviews())
+    .catch(() => {
+      document.getElementById('admin-reviews-error').textContent = "La mise à jour a échoué.";
+      document.getElementById('admin-reviews-error').style.display = 'block';
+    });
+}
+
+function deleteReview(id){
+  if(!confirm('Supprimer cet avis définitivement ?')) return;
+
+  fetch(`${API_BASE}/api/admin/reviews/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${getToken()}` },
+  })
+    .then(res => { if(!res.ok){ throw new Error('failed'); } loadReviews(); })
+    .catch(() => {
+      document.getElementById('admin-reviews-error').textContent = "La suppression a échoué.";
+      document.getElementById('admin-reviews-error').style.display = 'block';
     });
 }
 

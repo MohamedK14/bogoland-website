@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BOGOLAND — Mon compte</title>
+<title>BOGOLAND — Avis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -33,7 +33,7 @@
         <li><a href="shop.html?category=Ensembles" class="fr">Ensembles</a><a href="shop.html?category=Ensembles" class="en">Sets</a></li>
         <li><a href="shop.html?category=Voiles" class="fr">Voiles</a><a href="shop.html?category=Voiles" class="en">Veils</a></li>
         <li><a href="shop.html?category=Pants%20Pagne" class="fr">Pants Pagne</a><a href="shop.html?category=Pants%20Pagne" class="en">Pants Pagne</a></li>
-        <li><a href="avis.html" class="fr">Avis</a><a href="avis.html" class="en">Reviews</a></li>
+        <li><a href="avis.html" class="fr active">Avis</a><a href="avis.html" class="en active">Reviews</a></li>
         <li><a href="contact.html" class="fr">Contact</a><a href="contact.html" class="en">Contact</a></li>
       </ul>
     </nav>
@@ -61,79 +61,41 @@
           </span>
         </span>
       </button>
-      <button id="search-trigger" class="icon-btn" type="button" aria-label="Rechercher"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
-      <a href="account.html" class="icon-btn active" aria-label="Mon compte"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2.2"/><path d="M4 20c0-4 3.5-6.5 8-6.5s8 2.5 8 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></a>
+      <button id="search-trigger" class="icon-btn" type="button" aria-label="Rechercher"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button><a href="account.html" class="icon-btn" aria-label="Mon compte"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2.2"/><path d="M4 20c0-4 3.5-6.5 8-6.5s8 2.5 8 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></a>
       <a href="cart.html" class="icon-btn cart-link" aria-label="Panier"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 4h2.2l2.4 12.4a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21.8 8H6.4" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="21" r="1.4" fill="currentColor"/><circle cx="18" cy="21" r="1.4" fill="currentColor"/></svg><span id="cart-badge" class="cart-badge"></span></a>
       <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
     </div>
   </div>
 </header>
 
-<section class="account-section wrap">
-
-  <div id="account-guest">
-    <div class="admin-tabs" style="justify-content:center; margin-bottom:30px;">
-      <button class="admin-tab account-tab active" data-tab="login" type="button">Connexion</button>
-      <button class="admin-tab account-tab" data-tab="register" type="button">Créer un compte</button>
-    </div>
-
-    <form id="account-login-form" class="contact-form account-panel">
-      <input type="email" id="login-email" placeholder="E-mail" required>
-      <input type="password" id="login-password" placeholder="Mot de passe" required>
-      <button type="submit" class="admin-btn admin-btn-primary" style="align-self:center;">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        Se connecter
-      </button>
-      <p id="login-error" class="cart-note" style="display:none; color:var(--clay);"></p>
-    </form>
-
-    <form id="account-register-form" class="contact-form account-panel" style="display:none;">
-      <input type="text" id="register-name" placeholder="Nom complet" required>
-      <input type="email" id="register-email" placeholder="E-mail" required>
-      <input type="tel" id="register-phone" placeholder="Téléphone (optionnel)">
-      <input type="password" id="register-password" placeholder="Mot de passe (6 caractères min.)" required minlength="6">
-      <button type="submit" class="admin-btn admin-btn-primary" style="align-self:center;">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        Créer mon compte
-      </button>
-      <p id="register-error" class="cart-note" style="display:none; color:var(--clay);"></p>
-    </form>
+<section class="section wrap">
+  <div class="section-head">
+    <span class="story-label fr">Avis</span><span class="story-label en" style="display:none;">Reviews</span>
+    <h2 class="fr">Laissez votre avis</h2><h2 class="en" style="display:none;">Leave a review</h2>
   </div>
 
-  <div id="account-dashboard" style="display:none;">
-    <div class="admin-dashboard-head">
-      <div>
-        <span class="story-label fr">Mon compte</span>
-        <h2 class="fr" id="account-welcome">Bonjour</h2>
-      </div>
-      <button id="account-logout" class="admin-btn admin-btn-text" type="button">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3M15 16l4-4m0 0-4-4m4 4H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Déconnexion
-      </button>
+  <form id="review-form" class="contact-form" style="max-width:560px;">
+    <input type="text" id="review-name" placeholder="Votre nom" required>
+    <div class="review-star-picker" id="review-star-picker">
+      <button type="button" class="review-star" data-value="1" aria-label="1 étoile">★</button>
+      <button type="button" class="review-star" data-value="2" aria-label="2 étoiles">★</button>
+      <button type="button" class="review-star" data-value="3" aria-label="3 étoiles">★</button>
+      <button type="button" class="review-star" data-value="4" aria-label="4 étoiles">★</button>
+      <button type="button" class="review-star" data-value="5" aria-label="5 étoiles">★</button>
     </div>
+    <textarea id="review-message" rows="4" placeholder="Partagez votre expérience avec BOGOLAND..." required></textarea>
+    <button type="submit" class="admin-btn admin-btn-primary" style="align-self:flex-start;">Envoyer mon avis</button>
+    <p id="review-form-error" class="cart-note" style="display:none; color:var(--clay);"></p>
+    <p id="review-form-success" class="cart-note" style="display:none;">Merci ! Votre avis a été envoyé et sera publié après vérification.</p>
+  </form>
 
-    <div class="account-grid">
-      <div class="account-block">
-        <h3 class="fr">Mes informations</h3>
-        <form id="account-info-form" class="contact-form">
-          <input type="text" id="info-name" placeholder="Nom complet" required>
-          <input type="tel" id="info-phone" placeholder="Téléphone">
-          <textarea id="info-address" placeholder="Adresse de livraison" rows="3"></textarea>
-          <button type="submit" class="admin-btn admin-btn-primary" style="align-self:flex-start;">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Enregistrer
-          </button>
-          <p id="info-saved-note" class="cart-note" style="display:none;">Informations enregistrées.</p>
-        </form>
-      </div>
-
-      <div class="account-block">
-        <h3 class="fr">Historique des commandes</h3>
-        <div id="orders-list"></div>
-      </div>
-    </div>
+  <div class="section-head" style="margin-top:70px;">
+    <span class="story-label fr">Elles en parlent</span><span class="story-label en" style="display:none;">What they say</span>
+    <h2 class="fr">Avis de nos clientes</h2><h2 class="en" style="display:none;">Customer reviews</h2>
   </div>
-
+  <div id="reviews-list" class="reviews-list">
+    <!-- Rendered at runtime by renderReviews() in js/main.js -->
+  </div>
 </section>
 
 <footer>
@@ -197,7 +159,6 @@
 </div>
 
 <script src="js/main.js"></script>
-<script src="js/account.js"></script>
 
 </body>
 </html>

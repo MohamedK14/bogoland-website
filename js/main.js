@@ -437,6 +437,95 @@ function renderCategories(){
     });
 }
 
+// --- REVIEWS (Avis) ---
+// Public submission form on avis.html + display of admin-approved reviews
+// only — a submitted review isn't shown anywhere until approved.
+function reviewCardHTML(r){
+  const initial = r.name.trim().charAt(0).toUpperCase() || '?';
+  const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+  return `
+    <div class="review-card">
+      <div class="stars">${stars}</div>
+      <p>"${r.message}"</p>
+      <div class="review-name"><span class="avatar">${initial}</span> ${r.name}</div>
+    </div>
+  `;
+}
+
+function renderReviews(){
+  const listEl = document.getElementById('reviews-list');
+  if(!listEl) return;
+
+  fetch(`${API_BASE}/api/reviews`)
+    .then(res => res.json())
+    .then(reviews => {
+      listEl.innerHTML = reviews.length
+        ? reviews.map(reviewCardHTML).join('')
+        : '<p class="cart-empty">Aucun avis publié pour le moment.</p>';
+    })
+    .catch(() => {
+      listEl.innerHTML = '<p class="cart-empty">Impossible de charger les avis.</p>';
+    });
+}
+
+function initReviewForm(){
+  const form = document.getElementById('review-form');
+  if(!form) return;
+
+  const picker = document.getElementById('review-star-picker');
+  const stars = Array.from(picker.querySelectorAll('.review-star'));
+  let selectedRating = 0;
+
+  function paintStars(value){
+    stars.forEach(star => {
+      star.classList.toggle('filled', Number(star.dataset.value) <= value);
+    });
+  }
+
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      selectedRating = Number(star.dataset.value);
+      paintStars(selectedRating);
+    });
+    star.addEventListener('mouseenter', () => paintStars(Number(star.dataset.value)));
+    star.addEventListener('mouseleave', () => paintStars(selectedRating));
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const errorEl = document.getElementById('review-form-error');
+    const successEl = document.getElementById('review-form-success');
+    errorEl.style.display = 'none';
+    successEl.style.display = 'none';
+
+    const name = document.getElementById('review-name').value;
+    const message = document.getElementById('review-message').value;
+
+    if(selectedRating < 1){
+      errorEl.textContent = 'Veuillez choisir une note (étoiles).';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    fetch(`${API_BASE}/api/reviews`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, rating: selectedRating, message }),
+    })
+      .then(res => { if(!res.ok){ throw new Error('failed'); } return res.json(); })
+      .then(() => {
+        form.reset();
+        selectedRating = 0;
+        paintStars(0);
+        successEl.style.display = 'block';
+      })
+      .catch(() => {
+        errorEl.textContent = "L'envoi a échoué. Réessayez plus tard.";
+        errorEl.style.display = 'block';
+      });
+  });
+}
+
 function filterPillHTML(label, value, activeValue){
   return `<button type="button" class="filter-pill ${value === activeValue ? 'active' : ''}" data-category="${value}">${label}</button>`;
 }
@@ -723,5 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderShop();
   renderProductDetail();
   renderCart();
+  renderReviews();
+  initReviewForm();
   updateCartBadge();
 });

@@ -244,17 +244,7 @@ nav a.active::after{ width:100%; }
 .cart-btn:hover{ background:var(--mudbrown); color:var(--ivory); transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,0.15); }
 .cart-note{ font-size:12px; color:rgba(var(--ink-rgb),0.6); text-align:center; }
 
-/* TESTIMONIALS + INSTAGRAM */
-.split-section{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:0; }
-.testimonials{ background:var(--bg-alt); padding:80px 50px; }
-.testimonials h2{ font-size:26px; margin-bottom:30px; }
-.testi-card{ background:var(--surface); border:1px solid var(--line); border-radius:4px; padding:20px; margin-bottom:16px; }
-.testi-card .stars{ color:var(--ochre); font-size:13px; margin-bottom:10px; }
-.testi-card p{ font-size:13px; color:rgba(var(--ink-rgb),0.8); margin-bottom:12px; }
-.testi-name{ font-size:12px; font-weight:600; display:flex; align-items:center; gap:8px; }
-.testi-name .avatar{ width:26px; height:26px; border-radius:50%; background:var(--clay); color:var(--ivory);
-  display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
-
+/* INSTAGRAM */
 .instagram{ padding:80px 50px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .instagram h2{ font-size:26px; margin-bottom:8px; text-align:center; }
 .instagram .handle{ text-align:center; color:var(--clay); font-size:13px; margin-bottom:30px; }
@@ -266,6 +256,21 @@ nav a.active::after{ width:100%; }
 .social-icon svg{ width:20px; height:20px; fill:currentColor; }
 .social-icon:hover{ background:var(--mudbrown); border-color:var(--mudbrown); color:var(--ivory); transform:translateY(-2px); }
 .social-label{ font-size:11px; letter-spacing:0.04em; text-transform:uppercase; color:rgba(var(--ink-rgb),0.6); }
+
+/* AVIS (reviews) */
+.review-star-picker{ display:flex; gap:6px; }
+.review-star{ background:none; border:none; cursor:pointer; font-size:28px; line-height:1;
+  color:rgba(var(--ink-rgb),0.25); transition:color .15s ease, transform .1s ease; padding:0; }
+.review-star:hover{ transform:scale(1.15); }
+.review-star.filled{ color:var(--ochre); }
+
+.reviews-list{ display:flex; flex-direction:column; gap:16px; max-width:720px; margin:0 auto; }
+.review-card{ background:var(--surface); border:1px solid var(--line); border-radius:4px; padding:20px; }
+.review-card .stars{ color:var(--ochre); font-size:13px; margin-bottom:10px; }
+.review-card p{ font-size:13px; color:rgba(var(--ink-rgb),0.8); margin-bottom:12px; }
+.review-name{ font-size:12px; font-weight:600; display:flex; align-items:center; gap:8px; }
+.review-name .avatar{ width:26px; height:26px; border-radius:50%; background:var(--clay); color:var(--ivory);
+  display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
 
 /* CONTACT */
 .contact-section{ padding:90px 0; }
@@ -472,7 +477,6 @@ footer li{ margin-bottom:10px; font-size:13px; color:rgba(247,241,230,0.75); }
   .collections{ grid-template-columns:repeat(2,1fr); }
   .valeurs-grid{ grid-template-columns:repeat(2,1fr); }
   .products-grid{ grid-template-columns:repeat(2,1fr); }
-  .split-section{ grid-template-columns:1fr; }
   .footer-grid{ grid-template-columns:1fr 1fr; padding:0 40px 40px; }
   .contact-form .form-row{ grid-template-columns:1fr; }
   .product-detail{ grid-template-columns:1fr; padding:50px 40px; gap:30px; }

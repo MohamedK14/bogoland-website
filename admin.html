@@ -36,6 +36,7 @@
         <button class="admin-tab active" data-tab="categories" type="button">Catégories</button>
         <button class="admin-tab" data-tab="products" type="button">Produits</button>
         <button class="admin-tab" data-tab="customers" type="button">Clients</button>
+        <button class="admin-tab" data-tab="reviews" type="button">Avis</button>
       </div>
       <button id="admin-logout" class="admin-btn admin-btn-text" type="button">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3M15 16l4-4m0 0-4-4m4 4H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -65,6 +66,12 @@
       <p class="admin-hint">Si une cliente oublie son mot de passe, générez-lui-en un nouveau ici et communiquez-le-lui (WhatsApp, etc.).</p>
       <div id="admin-customers-list"></div>
       <p id="admin-customers-error" class="cart-note" style="display:none; color:var(--clay);"></p>
+    </div>
+
+    <div id="admin-tab-reviews" class="admin-panel" style="display:none;">
+      <p class="admin-hint">Approuvez les avis à publier sur le site, ou supprimez ceux que vous ne voulez pas garder.</p>
+      <div id="admin-reviews-list"></div>
+      <p id="admin-reviews-error" class="cart-note" style="display:none; color:var(--clay);"></p>
     </div>
   </div>
 
