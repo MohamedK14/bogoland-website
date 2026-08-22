@@ -235,8 +235,8 @@ function recordOrder(items, total){
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
     body: JSON.stringify({
-      items: items.map(({ product, qty }) => ({
-        productId: product.id, nameFr: product.nameFr, price: product.price, qty, image: product.image,
+      items: items.map(({ product, qty, size }) => ({
+        productId: product.id, nameFr: product.nameFr, price: product.price, qty, image: product.image, size: size || '',
       })),
       total,
     }),
@@ -311,22 +311,24 @@ function saveCart(cart){
   updateCartBadge();
 }
 
-function addToCart(productId, qty){
+// A cart entry is identified by product id + size together, so the same
+// product in two different sizes shows up as two separate line items.
+function addToCart(productId, qty, size = ''){
   const cart = getCart();
-  const existing = cart.find(item => item.id === productId);
+  const existing = cart.find(item => item.id === productId && (item.size || '') === size);
   if(existing){ existing.qty += qty; }
-  else{ cart.push({ id: productId, qty }); }
+  else{ cart.push({ id: productId, qty, size }); }
   saveCart(cart);
 }
 
-function removeFromCart(productId){
-  saveCart(getCart().filter(item => item.id !== productId));
+function removeFromCart(productId, size = ''){
+  saveCart(getCart().filter(item => !(item.id === productId && (item.size || '') === size)));
 }
 
-function updateCartItemQty(productId, qty){
-  if(qty <= 0){ return removeFromCart(productId); }
+function updateCartItemQty(productId, size, qty){
+  if(qty <= 0){ return removeFromCart(productId, size); }
   const cart = getCart();
-  const item = cart.find(i => i.id === productId);
+  const item = cart.find(i => i.id === productId && (i.size || '') === size);
   if(item){ item.qty = qty; saveCart(cart); }
 }
 
@@ -358,11 +360,12 @@ function isNewArrival(product, days = 30){
   return diffDays >= 0 && diffDays <= days;
 }
 
-function buildWhatsAppLink(product, qty, lang){
+function buildWhatsAppLink(product, qty, lang, size){
   const name = lang === 'en' ? product.nameEn : product.nameFr;
+  const sizeSuffix = size ? (lang === 'en' ? ` (size ${size})` : ` (taille ${size})` ) : '';
   const message = lang === 'en'
-    ? `Hello, I would like to order: ${name} x${qty} — ${formatPrice(product.price * qty)}`
-    : `Bonjour, je souhaite commander : ${name} x${qty} — ${formatPrice(product.price * qty)}`;
+    ? `Hello, I would like to order: ${name}${sizeSuffix} x${qty} — ${formatPrice(product.price * qty)}`
+    : `Bonjour, je souhaite commander : ${name}${sizeSuffix} x${qty} — ${formatPrice(product.price * qty)}`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
@@ -611,7 +614,7 @@ function renderProductDetail(){
           </div>
           <div class="detail-thumbs">
             ${product.images.map((src, i) => `
-              <img class="detail-thumb ${i === 0 ? 'active' : ''}" src="${src}" alt="${product.nameFr} - vue ${i + 1}" data-src="${src}">
+              <img class="detail-thumb ${i === 0 ? 'active' : ''}" src="${src}" alt="${product.nameFr} - vue ${i + 1}" data-index="${i}">
             `).join('')}
           </div>
         </div>
@@ -623,6 +626,13 @@ function renderProductDetail(){
           <p class="detail-desc en" style="display:none;">${product.descriptionEn}</p>
           <p class="stock fr ${product.inStock ? '' : 'out-of-stock'}">${product.inStock ? 'En stock' : 'Rupture de stock'}</p>
           <p class="stock en ${product.inStock ? '' : 'out-of-stock'}" style="display:none;">${product.inStock ? 'In stock' : 'Out of stock'}</p>
+
+          ${product.sizes && product.sizes.length ? `
+            <span class="size-picker-label fr">Taille</span><span class="size-picker-label en" style="display:none;">Size</span>
+            <div class="size-picker" id="size-picker">
+              ${product.sizes.map((s, i) => `<button type="button" class="size-pill ${i === 0 ? 'active' : ''}" data-size="${s}">${s}</button>`).join('')}
+            </div>
+          ` : ''}
 
           <div class="detail-qty">
             <label class="fr" for="qty-input">Quantité</label>
@@ -645,22 +655,53 @@ function renderProductDetail(){
         </div>
       `;
 
-      // Thumbnail swap
+      // Thumbnail swap + swipe-through-images on the main photo (mobile:
+      // no more tapping each thumbnail one by one to see the next view).
+      let currentImgIndex = 0;
+      const mainImgEl = document.getElementById('detail-main-img');
+      const mainImgWrap = container.querySelector('.detail-main-img');
+
+      function showImage(index){
+        currentImgIndex = (index + product.images.length) % product.images.length;
+        mainImgEl.src = product.images[currentImgIndex];
+        container.querySelectorAll('.detail-thumb').forEach((t, i) => t.classList.toggle('active', i === currentImgIndex));
+      }
+
       container.querySelectorAll('.detail-thumb').forEach(thumb => {
-        thumb.addEventListener('click', () => {
-          document.getElementById('detail-main-img').src = thumb.dataset.src;
-          container.querySelectorAll('.detail-thumb').forEach(t => t.classList.remove('active'));
-          thumb.classList.add('active');
+        thumb.addEventListener('click', () => showImage(Number(thumb.dataset.index)));
+      });
+
+      if(product.images.length > 1){
+        let swipeStartX = null;
+        mainImgWrap.style.touchAction = 'pan-y';
+        mainImgWrap.addEventListener('pointerdown', (e) => { swipeStartX = e.clientX; });
+        mainImgWrap.addEventListener('pointerup', (e) => {
+          if(swipeStartX === null) return;
+          const delta = e.clientX - swipeStartX;
+          swipeStartX = null;
+          if(Math.abs(delta) < 40) return; // too small to count as a swipe
+          showImage(delta < 0 ? currentImgIndex + 1 : currentImgIndex - 1);
+        });
+      }
+
+      // Size picker — defaults to the first available size, if any
+      let selectedSize = product.sizes && product.sizes.length ? product.sizes[0] : '';
+      container.querySelectorAll('.size-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          selectedSize = pill.dataset.size;
+          container.querySelectorAll('.size-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          updateWhatsAppLink();
         });
       });
 
-      // Keep the WhatsApp link in sync with quantity + language
+      // Keep the WhatsApp link in sync with quantity + language + size
       const qtyInput = document.getElementById('qty-input');
       const whatsappBtn = document.getElementById('whatsapp-btn');
       const updateWhatsAppLink = () => {
         const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
         const currentLang = document.documentElement.getAttribute('data-lang') || 'fr';
-        whatsappBtn.href = buildWhatsAppLink(product, qty, currentLang);
+        whatsappBtn.href = buildWhatsAppLink(product, qty, currentLang, selectedSize);
       };
       updateWhatsAppLink();
       qtyInput.addEventListener('input', updateWhatsAppLink);
@@ -669,7 +710,7 @@ function renderProductDetail(){
       const cartBtn = document.getElementById('cart-btn');
       cartBtn.addEventListener('click', () => {
         const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
-        addToCart(product.id, qty);
+        addToCart(product.id, qty, selectedSize);
         document.getElementById('cart-note').style.display = document.documentElement.getAttribute('data-lang') === 'fr' ? 'block' : 'none';
         document.getElementById('cart-note-en').style.display = document.documentElement.getAttribute('data-lang') === 'en' ? 'block' : 'none';
       });
@@ -677,7 +718,7 @@ function renderProductDetail(){
       whatsappBtn.addEventListener('click', () => {
         trackProductClick(product.id);
         const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
-        recordOrder([{ product, qty }], product.price * qty);
+        recordOrder([{ product, qty, size: selectedSize }], product.price * qty);
       });
 
       renderSimilarProducts(products, product);
@@ -704,14 +745,15 @@ function renderSimilarProducts(allProducts, current){
   section.querySelector('.products-grid').innerHTML = similar.map(productCardHTML).join('');
 }
 
-function cartItemHTML(product, qty){
+function cartItemHTML(product, qty, size){
   const lang = document.documentElement.getAttribute('data-lang') || 'fr';
   const name = lang === 'en' ? product.nameEn : product.nameFr;
   return `
-    <div class="cart-item" data-id="${product.id}">
+    <div class="cart-item" data-id="${product.id}" data-size="${size || ''}">
       <img src="${product.image}" alt="${name}">
       <div class="cart-item-info">
         <h4 class="fr">${product.nameFr}</h4><h4 class="en" style="display:none;">${product.nameEn}</h4>
+        ${size ? `<p class="cart-item-size">Taille : ${size}</p>` : ''}
         <p class="price">${formatPrice(product.price)}</p>
         <div class="cart-item-qty">
           <button type="button" class="qty-btn" data-action="decrease" aria-label="Diminuer la quantité">${MINUS_ICON_SVG}</button>
@@ -747,14 +789,14 @@ function renderCart(){
     .then(res => res.json())
     .then(products => {
       const items = cart
-        .map(entry => ({ product: products.find(p => p.id === entry.id), qty: entry.qty }))
+        .map(entry => ({ product: products.find(p => p.id === entry.id), qty: entry.qty, size: entry.size || '' }))
         .filter(entry => entry.product);
 
       const total = items.reduce((sum, { product, qty }) => sum + product.price * qty, 0);
 
       container.innerHTML = `
         <div class="cart-items">
-          ${items.map(({ product, qty }) => cartItemHTML(product, qty)).join('')}
+          ${items.map(({ product, qty, size }) => cartItemHTML(product, qty, size)).join('')}
         </div>
         <div class="cart-summary">
           <p class="cart-total fr">Total : ${formatPrice(total)}</p>
@@ -768,9 +810,10 @@ function renderCart(){
 
       const updateWhatsAppCartLink = () => {
         const currentLang = document.documentElement.getAttribute('data-lang') || 'fr';
-        const lines = items.map(({ product, qty }) => {
+        const lines = items.map(({ product, qty, size }) => {
           const name = currentLang === 'en' ? product.nameEn : product.nameFr;
-          return `${name} x${qty} — ${formatPrice(product.price * qty)}`;
+          const sizeSuffix = size ? (currentLang === 'en' ? ` (size ${size})` : ` (taille ${size})`) : '';
+          return `${name}${sizeSuffix} x${qty} — ${formatPrice(product.price * qty)}`;
         });
         const message = currentLang === 'en'
           ? `Hello, I would like to order:\n${lines.join('\n')}\nTotal: ${formatPrice(total)}`
@@ -786,17 +829,18 @@ function renderCart(){
 
       container.querySelectorAll('.cart-item').forEach(el => {
         const id = Number(el.dataset.id);
-        const entry = items.find(i => i.product.id === id);
+        const size = el.dataset.size || '';
+        const entry = items.find(i => i.product.id === id && i.size === size);
         el.querySelector('[data-action="increase"]').addEventListener('click', () => {
-          updateCartItemQty(id, entry.qty + 1);
+          updateCartItemQty(id, size, entry.qty + 1);
           renderCart();
         });
         el.querySelector('[data-action="decrease"]').addEventListener('click', () => {
-          updateCartItemQty(id, entry.qty - 1);
+          updateCartItemQty(id, size, entry.qty - 1);
           renderCart();
         });
         el.querySelector('.cart-remove').addEventListener('click', () => {
-          removeFromCart(id);
+          removeFromCart(id, size);
           renderCart();
         });
       });

@@ -230,6 +230,11 @@ function openProductModal(product){
   document.getElementById('product-desc-fr').value = product ? product.descriptionFr : '';
   document.getElementById('product-in-stock').checked = product ? product.inStock : true;
 
+  const selectedSizes = product ? (product.sizes || []) : [];
+  document.querySelectorAll('.admin-size-check input').forEach(cb => {
+    cb.checked = selectedSizes.includes(cb.value);
+  });
+
   document.getElementById('product-modal-overlay').style.display = 'flex';
 }
 
@@ -303,6 +308,7 @@ document.getElementById('product-form').addEventListener('submit', (e) => {
     descriptionEn: descriptionFr,
     inStock: document.getElementById('product-in-stock').checked,
     images: workingImages,
+    sizes: Array.from(document.querySelectorAll('.admin-size-check input:checked')).map(cb => cb.value),
   };
 
   const url = id ? `${API_BASE}/api/products/${id}` : `${API_BASE}/api/products`;
