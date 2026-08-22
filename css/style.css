@@ -522,11 +522,11 @@ footer li{ margin-bottom:10px; font-size:13px; color:rgba(247,241,230,0.75); }
   .collections{ grid-template-columns:1fr 1fr; }
   .valeurs-grid{ grid-template-columns:1fr; }
   .search-overlay{ padding:40px 16px 16px; }
-  #collections{ padding-top:120px; } /* only the section right after the slider needs the extra top gap */
+  #collections{ padding-top:55px; }
   .section-head{ margin-bottom:30px; }
   .section-head .story-label{ margin-bottom:6px; }
   .section-head h2{ font-size:28px; } /* fits headings like "Produits populaires" on one line */
-  #best-sellers-section{ padding-top:65px; }
+  #best-sellers-section{ padding-top:25px; }
   .valeurs{ padding:55px 0; }
   .instagram{ padding:40px 20px 65px; }
   footer{ padding-top:45px; }
