@@ -471,6 +471,32 @@ function renderReviews(){
     });
 }
 
+// --- CONTACT FORM ---
+// No email service set up, so this follows the same pattern as checkout:
+// build a WhatsApp message from the form and open it, rather than being a
+// dead mockup with nowhere for the message to go.
+function initContactForm(){
+  const form = document.getElementById('contact-form');
+  if(!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const lang = document.documentElement.getAttribute('data-lang') || 'fr';
+
+    const name = document.getElementById('contact-name').value;
+    const email = document.getElementById('contact-email').value;
+    const phone = document.getElementById('contact-phone').value;
+    const messageText = document.getElementById('contact-message').value;
+
+    const lines = lang === 'en'
+      ? [`Hello, my name is ${name}.`, `Email: ${email}`, phone ? `Phone: ${phone}` : '', messageText]
+      : [`Bonjour, je m'appelle ${name}.`, `E-mail : ${email}`, phone ? `Téléphone : ${phone}` : '', messageText];
+
+    const message = lines.filter(Boolean).join('\n');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+  });
+}
+
 function initReviewForm(){
   const form = document.getElementById('review-form');
   if(!form) return;
@@ -858,5 +884,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCart();
   renderReviews();
   initReviewForm();
+  initContactForm();
   updateCartBadge();
 });

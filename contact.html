@@ -75,17 +75,20 @@
     <span class="story-label fr">Nous contacter</span><span class="story-label en" style="display:none;">Get in touch</span>
     <h2 class="fr">Contact</h2><h2 class="en" style="display:none;">Contact</h2>
   </div>
-  <form class="contact-form" onsubmit="return false;">
+  <form id="contact-form" class="contact-form">
     <div class="form-row">
-      <input type="text" data-fr="Nom" data-en="Name" placeholder="Nom" required>
-      <input type="email" data-fr="E-mail" data-en="Email" placeholder="E-mail" required>
+      <input type="text" id="contact-name" data-fr="Nom" data-en="Name" placeholder="Nom" required>
+      <input type="email" id="contact-email" data-fr="E-mail" data-en="Email" placeholder="E-mail" required>
     </div>
-    <input type="tel" data-fr="Téléphone" data-en="Phone" placeholder="Téléphone">
-    <textarea rows="8" data-fr="Commentaire" data-en="Comment" placeholder="Commentaire"></textarea>
-    <button type="submit" class="contact-submit" data-fr="Envoyer" data-en="Submit">Envoyer</button>
+    <input type="tel" id="contact-phone" data-fr="Téléphone" data-en="Phone" placeholder="Téléphone">
+    <textarea id="contact-message" rows="8" data-fr="Commentaire" data-en="Comment" placeholder="Commentaire" required></textarea>
+    <button type="submit" class="admin-btn admin-btn-primary" style="align-self:flex-start;">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.11-1.34A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Zm5.2 14.2c-.22.62-1.28 1.18-1.77 1.24-.45.06-.98.09-1.58-.1-.36-.11-.83-.27-1.43-.53-2.52-1.09-4.16-3.63-4.29-3.8-.13-.17-1.02-1.36-1.02-2.6 0-1.24.65-1.84.88-2.09.22-.25.49-.31.65-.31.16 0 .33 0 .47.01.15.01.35-.06.55.42.2.49.68 1.68.74 1.8.06.12.1.27.02.44-.08.17-.12.27-.24.42-.12.15-.25.33-.36.44-.12.12-.24.25-.1.5.14.25.6 1 1.29 1.62.89.79 1.63 1.04 1.88 1.16.25.12.4.1.55-.06.15-.16.63-.73.8-.99.17-.25.34-.21.56-.13.22.08 1.41.66 1.65.78.24.12.4.18.46.28.06.1.06.6-.16 1.22Z"/></svg>
+      <span class="fr">Envoyer sur WhatsApp</span><span class="en" style="display:none;">Send via WhatsApp</span>
+    </button>
   </form>
-  <p class="contact-note fr">Ce formulaire est une maquette pour l'instant — l'envoi sera activé une fois le site connecté.</p>
-  <p class="contact-note en" style="display:none;">This form is a mockup for now — sending will be enabled once the site is connected.</p>
+  <p class="contact-note fr">En envoyant, votre message s'ouvre dans WhatsApp, prêt à être envoyé.</p>
+  <p class="contact-note en" style="display:none;">Sending opens WhatsApp with your message ready to go.</p>
 </section>
 
 <footer>

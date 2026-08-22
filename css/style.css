@@ -239,7 +239,7 @@ nav a.active::after{ width:100%; }
 .detail-qty{ display:flex; align-items:center; gap:12px; margin-bottom:24px; }
 .detail-qty label{ font-size:13px; letter-spacing:0.05em; text-transform:uppercase; }
 .detail-qty input{ width:70px; border:1px solid var(--line); border-radius:2px; padding:10px 12px;
-  font-family:'Jost'; font-size:14px; color:var(--ink); background:var(--surface); }
+  font-family:'Jost'; font-size:16px; color:var(--ink); background:var(--surface); }
 .detail-actions{ display:flex; flex-direction:column; gap:12px; max-width:340px; }
 .whatsapp-btn, .cart-btn{ display:flex; align-items:center; justify-content:center; gap:9px; padding:16px 20px;
   font-size:13px; letter-spacing:0.06em; text-transform:uppercase; border-radius:2px; cursor:pointer;
@@ -286,7 +286,7 @@ nav a.active::after{ width:100%; }
 .contact-form .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
 .contact-form input, .contact-form textarea{
   width:100%; border:1px solid var(--line); border-radius:2px; padding:14px 16px;
-  font-family:'Jost'; font-size:14px; color:var(--ink); background:var(--surface);
+  font-family:'Jost'; font-size:16px; color:var(--ink); background:var(--surface);
 }
 .contact-form input::placeholder, .contact-form textarea::placeholder{ color:rgba(var(--ink-rgb),0.45); }
 .contact-form input:focus, .contact-form textarea:focus{ outline:none; border-color:var(--clay); }
@@ -370,7 +370,7 @@ nav a.active::after{ width:100%; }
 .admin-image-thumb button svg{ width:10px; height:10px; }
 .admin-upload-btn{ align-self:flex-start; cursor:pointer; }
 select#product-category{ width:100%; border:1px solid var(--line); border-radius:2px; padding:14px 16px;
-  font-family:'Jost'; font-size:14px; color:var(--ink); background:var(--surface); }
+  font-family:'Jost'; font-size:16px; color:var(--ink); background:var(--surface); }
 
 .admin-modal-overlay{ position:fixed; inset:0; background:rgba(46,32,19,0.55); display:flex;
   align-items:center; justify-content:center; padding:24px; z-index:100; }
@@ -478,7 +478,7 @@ footer h5{ font-size:12px; letter-spacing:0.08em; text-transform:uppercase; marg
 footer ul{ list-style:none; }
 footer li{ margin-bottom:10px; font-size:13px; color:rgba(247,241,230,0.75); }
 .newsletter-form{ display:flex; margin-top:14px; border:1px solid rgba(247,241,230,0.3); border-radius:24px; overflow:hidden; }
-.newsletter-form input{ flex:1; background:none; border:none; padding:12px 18px; color:var(--ivory); font-family:'Jost'; font-size:13px; }
+.newsletter-form input{ flex:1; background:none; border:none; padding:12px 18px; color:var(--ivory); font-family:'Jost'; font-size:16px; }
 .newsletter-form input::placeholder{ color:rgba(247,241,230,0.5); }
 .newsletter-form button{ background:var(--clay); color:var(--ivory); border:none; padding:0 20px; cursor:pointer; font-size:13px; }
 .footer-bottom{ border-top:1px solid rgba(247,241,230,0.15); padding:20px 0; text-align:center;
