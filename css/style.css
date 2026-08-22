@@ -171,7 +171,7 @@ nav a.active::after{ width:100%; }
 .col-unavailable-badge{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
   background:var(--clay); color:var(--ivory); padding:9px 20px; border-radius:20px;
   font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; z-index:2; }
-.voir-boutique{ text-align:center; margin-top:40px; margin-bottom:24px; }
+.voir-boutique{ text-align:center; margin-top:26px; margin-bottom:26px; }
 
 /* SHOP FILTERS */
 .shop-filters{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:44px; }
@@ -525,4 +525,9 @@ footer li{ margin-bottom:10px; font-size:13px; color:rgba(247,241,230,0.75); }
   #collections{ padding-top:120px; } /* only the section right after the slider needs the extra top gap */
   .section-head{ margin-bottom:30px; }
   .section-head .story-label{ margin-bottom:6px; }
+  .section-head h2{ font-size:28px; } /* fits headings like "Produits populaires" on one line */
+  #best-sellers-section{ padding-top:110px; }
+  .valeurs{ padding:55px 0; }
+  .instagram{ padding:40px 20px 65px; }
+  footer{ padding-top:45px; }
 }
