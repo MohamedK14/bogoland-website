@@ -187,7 +187,7 @@ nav a.active::after{ width:100%; }
 .btn-outline:hover{ background:var(--mudbrown); color:var(--ivory); }
 
 /* VALEURS */
-.valeurs{ background:var(--mudbrown); color:var(--ivory); padding:90px 0; }
+.valeurs{ background:var(--indigo); color:var(--ivory); padding:90px 0; }
 .valeurs .section-head h2, .valeurs .story-label{ color:var(--ivory); }
 .valeurs .story-label{ color:var(--ochre); }
 .valeurs-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:30px; text-align:center; }
