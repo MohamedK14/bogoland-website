@@ -373,16 +373,10 @@ function productCardHTML(p){
   const badge = isNewArrival(p)
     ? '<span class="product-badge fr">Nouveau</span><span class="product-badge en" style="display:none;">New</span>'
     : '';
-  // Quick-add only makes sense when there's no size to choose first, and
-  // only for items actually in stock.
-  const quickAdd = (!p.sizes || p.sizes.length === 0) && p.inStock
-    ? `<button type="button" class="quick-add-btn" data-id="${p.id}" aria-label="Ajouter au panier">${PLUS_ICON_SVG}</button>`
-    : '';
   return `
     <a class="product-card" href="product.html?id=${p.id}">
       <div class="img-wrap">
         ${badge}
-        ${quickAdd}
         <img class="base-img" src="${p.image}" alt="${p.nameFr}">
         <img class="hover-img" src="${p.hoverImage}" alt="${p.nameFr} - vue 2">
       </div>
@@ -396,21 +390,6 @@ function productCardHTML(p){
   `;
 }
 
-// Wires the quick-add button on any grid of product cards just rendered.
-// Adding qty 1 (no size — quick-add only ever appears on sizeless items)
-// and blocks the card's own link from firing so it doesn't also navigate.
-function wireQuickAddButtons(container){
-  container.querySelectorAll('.quick-add-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      addToCart(Number(btn.dataset.id), 1, '');
-      btn.classList.add('added');
-      setTimeout(() => btn.classList.remove('added'), 900);
-    });
-  });
-}
-
 // Renders product cards from the live API into #products-grid, if that
 // container exists on the current page (only index.html has one).
 function renderProducts(){
@@ -421,7 +400,6 @@ function renderProducts(){
     .then(res => res.json())
     .then(products => {
       grid.innerHTML = products.map(productCardHTML).join('');
-      wireQuickAddButtons(grid);
     })
     .catch(err => {
       console.error('Could not load products from API', err);
@@ -444,7 +422,6 @@ function renderBestSellers(){
         .sort((a, b) => (b.clickCount || 0) - (a.clickCount || 0))
         .slice(0, 4);
       grid.innerHTML = topSellers.map(productCardHTML).join('');
-      wireQuickAddButtons(grid);
     })
     .catch(err => {
       console.error('Could not load best sellers from API', err);
@@ -629,7 +606,6 @@ function renderShop(){
 
         const filtered = activeCategory ? products.filter(p => p.category === activeCategory) : products;
         grid.innerHTML = filtered.map(productCardHTML).join('');
-        wireQuickAddButtons(grid);
         emptyEl.style.display = filtered.length === 0 ? 'block' : 'none';
         // Heading reflects the actual selection, so "Tous" and "Toute la
         // boutique" aren't just saying the same thing twice on screen.
@@ -819,7 +795,6 @@ function renderSimilarProducts(allProducts, current){
 
   const similarGrid = section.querySelector('.products-grid');
   similarGrid.innerHTML = similar.map(productCardHTML).join('');
-  wireQuickAddButtons(similarGrid);
 }
 
 function cartItemHTML(product, qty, size){
