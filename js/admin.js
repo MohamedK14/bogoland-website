@@ -38,7 +38,7 @@ function categoryRowHTML(c){
         <span>${c.nameFr}</span>
       </div>
       <div class="admin-row-actions">
-        <label class="admin-switch">
+        <label class="admin-switch" title="${c.available ? 'Disponible — cliquez pour rendre indisponible sur la boutique' : 'Indisponible — cliquez pour rendre disponible sur la boutique'}">
           <input type="checkbox" class="admin-toggle" ${c.available ? 'checked' : ''}>
           <span class="slider"></span>
         </label>
@@ -68,6 +68,9 @@ function loadCategories(){
         const toggle = row.querySelector('.admin-toggle');
         toggle.addEventListener('change', () => {
           updateCategoryAvailability(id, toggle.checked, toggle);
+          toggle.closest('.admin-switch').title = toggle.checked
+            ? 'Disponible — cliquez pour rendre indisponible sur la boutique'
+            : 'Indisponible — cliquez pour rendre disponible sur la boutique';
         });
         row.querySelector('.admin-edit-category').addEventListener('click', () => openCategoryModal(category));
         row.querySelector('.admin-delete-category').addEventListener('click', () => deleteCategory(id, category.nameFr));
@@ -104,6 +107,9 @@ function updateCategoryAvailability(id, available, toggleEl){
     .catch(err => {
       console.error(err);
       toggleEl.checked = !available; // revert the switch on failure
+      toggleEl.closest('.admin-switch').title = toggleEl.checked
+        ? 'Disponible — cliquez pour rendre indisponible sur la boutique'
+        : 'Indisponible — cliquez pour rendre disponible sur la boutique';
       errorEl.textContent = "La mise à jour a échoué.";
       errorEl.style.display = 'block';
     });
