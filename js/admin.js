@@ -70,7 +70,7 @@ function loadCategories(){
           updateCategoryAvailability(id, toggle.checked, toggle);
         });
         row.querySelector('.admin-edit-category').addEventListener('click', () => openCategoryModal(category));
-        row.querySelector('.admin-delete-category').addEventListener('click', () => deleteCategory(id));
+        row.querySelector('.admin-delete-category').addEventListener('click', () => deleteCategory(id, category.nameFr));
       });
     })
     .catch(err => {
@@ -172,11 +172,33 @@ function uploadCategoryImage(file){
     });
 }
 
-function deleteCategory(id){
-  if(!confirm('Supprimer cette catégorie définitivement ?')) return;
+function deleteCategory(id, nameFr){
   const errorEl = document.getElementById('admin-error');
   errorEl.style.display = 'none';
 
+  // Products aren't linked to categories by ID, just by name — so deleting
+  // a category never touches them, but it does mean they lose their card
+  // on the homepage and their filter pill on the shop page. Warn with a
+  // real count so that's not a surprise.
+  fetch(`${API_BASE}/api/products`)
+    .then(res => res.json())
+    .then(products => {
+      const affected = products.filter(p => p.category === nameFr).length;
+      const message = affected > 0
+        ? `${affected} produit(s) utilisent encore la catégorie "${nameFr}". Ils resteront sur le site mais ne seront plus filtrables par cette catégorie. Supprimer quand même ?`
+        : `Supprimer la catégorie "${nameFr}" définitivement ?`;
+      if(!confirm(message)) return;
+      performCategoryDelete(id, errorEl);
+    })
+    .catch(() => {
+      // Couldn't check product count — fall back to a plain confirm rather
+      // than blocking the delete entirely.
+      if(!confirm(`Supprimer la catégorie "${nameFr}" définitivement ?`)) return;
+      performCategoryDelete(id, errorEl);
+    });
+}
+
+function performCategoryDelete(id, errorEl){
   fetch(`${API_BASE}/api/categories/${id}`, {
     method: 'DELETE',
     headers: { 'Authorization': `Bearer ${getToken()}` },
