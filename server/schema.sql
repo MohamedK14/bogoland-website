@@ -75,3 +75,13 @@ CREATE TABLE IF NOT EXISTS reviews (
 -- Per-product available sizes, e.g. '{XS,S,M,L,Standard}'. Empty means the
 -- product doesn't use sizes (no picker shown on the product page).
 ALTER TABLE products ADD COLUMN IF NOT EXISTS sizes TEXT[] NOT NULL DEFAULT '{}';
+
+-- The admin account itself, moved out of env vars so the admin can change
+-- their own email/password from the admin panel instead of needing someone
+-- with Render dashboard access to do it. Exactly one row in practice.
+-- seed-admin.js inserts the first row from ADMIN_EMAIL/ADMIN_PASSWORD_HASH.
+CREATE TABLE IF NOT EXISTS admin_account (
+  id            SERIAL PRIMARY KEY,
+  email         TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL
+);

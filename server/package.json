@@ -8,6 +8,7 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "seed": "node seed.js",
+    "seed-admin": "node seed-admin.js",
     "hash-password": "node hash-password.js"
   },
   "dependencies": {

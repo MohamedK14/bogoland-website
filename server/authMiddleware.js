@@ -11,7 +11,13 @@ function requireAdmin(req, res, next){
   }
 
   try {
-    jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Without this check, a valid customer token (signed with the same
+    // secret) would also pass — role is what actually distinguishes them.
+    if(decoded.role !== 'admin'){
+      return res.status(403).json({ error: 'Not an admin token' });
+    }
+    req.adminId = decoded.id;
     next();
   } catch(err){
     return res.status(401).json({ error: 'Invalid or expired token' });

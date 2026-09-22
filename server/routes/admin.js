@@ -8,6 +8,9 @@ const { rowToReview } = require('../mappers');
 const router = express.Router();
 
 // POST /api/admin/login — { email, password } -> { token }
+// Credentials live in the admin_account table (see seed-admin.js), not env
+// vars, so the admin can change their own email/password from the admin
+// panel via PUT /account below, instead of needing Render dashboard access.
 router.post('/login', async (req, res) => {
   const { email, password } = req.body || {};
 
@@ -15,17 +18,63 @@ router.post('/login', async (req, res) => {
     return res.status(400).json({ error: 'Email and password required' });
   }
 
-  const validEmail = email === process.env.ADMIN_EMAIL;
-  const validPassword = validEmail && process.env.ADMIN_PASSWORD_HASH
-    ? await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH)
-    : false;
+  try {
+    const result = await pool.query('SELECT * FROM admin_account WHERE email = $1', [email]);
+    const admin = result.rows[0];
+    const validPassword = admin ? await bcrypt.compare(password, admin.password_hash) : false;
 
-  if(!validEmail || !validPassword){
-    return res.status(401).json({ error: 'Invalid credentials' });
+    if(!admin || !validPassword){
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ role: 'admin', id: admin.id, email: admin.email }, process.env.JWT_SECRET, { expiresIn: '12h' });
+    res.json({ token });
+  } catch(err){
+    console.error(err);
+    res.status(500).json({ error: 'Could not log in' });
+  }
+});
+
+// PUT /api/admin/account — admin only. Body: { currentPassword, newEmail?, newPassword? }.
+// Lets the admin change their own login without touching Render env vars.
+// Always requires the current password, even though the route itself is
+// already behind requireAdmin, since this changes the credentials that
+// guard everything else in the admin panel.
+router.put('/account', requireAdmin, async (req, res) => {
+  const { currentPassword, newEmail, newPassword } = req.body || {};
+
+  if(!currentPassword){
+    return res.status(400).json({ error: 'currentPassword is required' });
+  }
+  if(newPassword && newPassword.length < 6){
+    return res.status(400).json({ error: 'newPassword must be at least 6 characters' });
   }
 
-  const token = jwt.sign({ role: 'admin', email }, process.env.JWT_SECRET, { expiresIn: '12h' });
-  res.json({ token });
+  try {
+    const result = await pool.query('SELECT * FROM admin_account WHERE id = $1', [req.adminId]);
+    const admin = result.rows[0];
+    if(!admin){
+      return res.status(404).json({ error: 'Admin account not found' });
+    }
+
+    const validPassword = await bcrypt.compare(currentPassword, admin.password_hash);
+    if(!validPassword){
+      return res.status(401).json({ error: 'Mot de passe actuel incorrect' });
+    }
+
+    const newHash = newPassword ? await bcrypt.hash(newPassword, 10) : admin.password_hash;
+    const updated = await pool.query(
+      `UPDATE admin_account SET email = COALESCE($1, email), password_hash = $2 WHERE id = $3 RETURNING email`,
+      [newEmail || null, newHash, req.adminId]
+    );
+    res.json({ email: updated.rows[0].email });
+  } catch(err){
+    console.error(err);
+    if(err.code === '23505'){ // unique_violation on email
+      return res.status(409).json({ error: 'Cet e-mail est déjà utilisé.' });
+    }
+    res.status(500).json({ error: 'Could not update account' });
+  }
 });
 
 // GET /api/admin/customers — admin only. Never returns password_hash.
