@@ -37,10 +37,14 @@ function categoryRowHTML(c){
         <img src="${c.image}" alt="${c.nameFr}">
         <span>${c.nameFr}</span>
       </div>
-      <label class="admin-switch">
-        <input type="checkbox" class="admin-toggle" ${c.available ? 'checked' : ''}>
-        <span class="slider"></span>
-      </label>
+      <div class="admin-row-actions">
+        <label class="admin-switch">
+          <input type="checkbox" class="admin-toggle" ${c.available ? 'checked' : ''}>
+          <span class="slider"></span>
+        </label>
+        <button type="button" class="admin-btn admin-btn-ghost admin-btn-sm admin-edit-category">Modifier</button>
+        <button type="button" class="admin-btn admin-btn-danger admin-btn-sm admin-delete-category">Supprimer</button>
+      </div>
     </div>
   `;
 }
@@ -60,10 +64,13 @@ function loadCategories(){
 
       list.querySelectorAll('.admin-row').forEach(row => {
         const id = row.dataset.id;
+        const category = categories.find(c => String(c.id) === id);
         const toggle = row.querySelector('.admin-toggle');
         toggle.addEventListener('change', () => {
           updateCategoryAvailability(id, toggle.checked, toggle);
         });
+        row.querySelector('.admin-edit-category').addEventListener('click', () => openCategoryModal(category));
+        row.querySelector('.admin-delete-category').addEventListener('click', () => deleteCategory(id));
       });
     })
     .catch(err => {
@@ -101,6 +108,155 @@ function updateCategoryAvailability(id, available, toggleEl){
       errorEl.style.display = 'block';
     });
 }
+
+// --- CATEGORY MODAL (add/edit/delete) ---
+
+let workingCategoryImage = '';
+
+function renderCategoryImagePreview(){
+  const list = document.getElementById('category-image-preview');
+  list.innerHTML = workingCategoryImage
+    ? `<div class="admin-image-thumb"><img src="${workingCategoryImage}" alt=""></div>`
+    : '<p class="admin-hint" style="margin:0;">Aucune image pour le moment.</p>';
+}
+
+function openCategoryModal(category){
+  document.getElementById('category-form-error').style.display = 'none';
+  document.getElementById('category-form').reset();
+
+  workingCategoryImage = category ? category.image : '';
+  renderCategoryImagePreview();
+
+  document.getElementById('category-modal-title').textContent = category ? 'Modifier la catégorie' : 'Ajouter une catégorie';
+  document.getElementById('category-id').value = category ? category.id : '';
+  document.getElementById('category-name-fr').value = category ? category.nameFr : '';
+  document.getElementById('category-available').checked = category ? category.available : true;
+
+  document.getElementById('category-modal-overlay').style.display = 'flex';
+}
+
+function closeCategoryModal(){
+  document.getElementById('category-modal-overlay').style.display = 'none';
+}
+
+function uploadCategoryImage(file){
+  const statusEl = document.getElementById('category-upload-status');
+  statusEl.textContent = "Envoi de l'image...";
+  statusEl.style.display = 'block';
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  fetch(`${API_BASE}/api/upload`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${getToken()}` },
+    body: formData,
+  })
+    .then(res => {
+      if(res.status === 401){
+        clearToken();
+        showLogin();
+        throw new Error('Session expirée, reconnectez-vous.');
+      }
+      if(!res.ok){ throw new Error('Upload failed'); }
+      return res.json();
+    })
+    .then(({ url }) => {
+      workingCategoryImage = url;
+      renderCategoryImagePreview();
+      statusEl.style.display = 'none';
+    })
+    .catch(err => {
+      console.error(err);
+      statusEl.textContent = "Échec de l'envoi de l'image.";
+    });
+}
+
+function deleteCategory(id){
+  if(!confirm('Supprimer cette catégorie définitivement ?')) return;
+  const errorEl = document.getElementById('admin-error');
+  errorEl.style.display = 'none';
+
+  fetch(`${API_BASE}/api/categories/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${getToken()}` },
+  })
+    .then(res => {
+      if(res.status === 401){
+        clearToken();
+        showLogin();
+        throw new Error('Session expirée, reconnectez-vous.');
+      }
+      if(!res.ok){ throw new Error('Delete failed'); }
+      loadCategories();
+    })
+    .catch(err => {
+      console.error(err);
+      errorEl.textContent = "La suppression a échoué.";
+      errorEl.style.display = 'block';
+    });
+}
+
+document.getElementById('admin-add-category').addEventListener('click', () => openCategoryModal(null));
+document.getElementById('category-modal-close').addEventListener('click', closeCategoryModal);
+document.getElementById('category-form-cancel').addEventListener('click', closeCategoryModal);
+document.getElementById('category-modal-overlay').addEventListener('click', (e) => {
+  if(e.target.id === 'category-modal-overlay'){ closeCategoryModal(); }
+});
+
+document.getElementById('category-image-input').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(file){ uploadCategoryImage(file); }
+  e.target.value = '';
+});
+
+document.getElementById('category-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const errorEl = document.getElementById('category-form-error');
+  errorEl.style.display = 'none';
+
+  const id = document.getElementById('category-id').value;
+  const nameFr = document.getElementById('category-name-fr').value;
+  // Category names are French-only in the admin form, same as products —
+  // mirror into nameEn so the storefront's (currently unused) EN toggle
+  // doesn't end up with a blank category name.
+  const payload = {
+    nameFr,
+    nameEn: nameFr,
+    available: document.getElementById('category-available').checked,
+    image: workingCategoryImage,
+  };
+
+  const url = id ? `${API_BASE}/api/categories/${id}` : `${API_BASE}/api/categories`;
+  const method = id ? 'PUT' : 'POST';
+
+  fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(payload),
+  })
+    .then(res => {
+      if(res.status === 401){
+        clearToken();
+        showLogin();
+        throw new Error('Session expirée, reconnectez-vous.');
+      }
+      if(!res.ok){ throw new Error('Save failed'); }
+      return res.json();
+    })
+    .then(() => {
+      closeCategoryModal();
+      loadCategories();
+    })
+    .catch(err => {
+      console.error(err);
+      errorEl.textContent = "L'enregistrement a échoué.";
+      errorEl.style.display = 'block';
+    });
+});
 
 // --- PRODUCTS TAB ---
 
