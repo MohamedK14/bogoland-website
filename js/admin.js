@@ -709,6 +709,46 @@ function deleteReview(id){
     });
 }
 
+// --- MY ACCOUNT TAB (change own admin email/password) ---
+
+document.getElementById('account-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const errorEl = document.getElementById('account-form-error');
+  const successEl = document.getElementById('account-form-success');
+  errorEl.style.display = 'none';
+  successEl.style.display = 'none';
+
+  const currentPassword = document.getElementById('account-current-password').value;
+  const newEmail = document.getElementById('account-new-email').value;
+  const newPassword = document.getElementById('account-new-password').value;
+
+  fetch(`${API_BASE}/api/admin/account`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify({
+      currentPassword,
+      newEmail: newEmail || undefined,
+      newPassword: newPassword || undefined,
+    }),
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if(!ok){ throw new Error(data.error || "La mise à jour a échoué."); }
+      document.getElementById('account-form').reset();
+      successEl.style.display = 'block';
+    })
+    .catch(err => {
+      console.error(err);
+      errorEl.textContent = err instanceof TypeError
+        ? "Impossible de contacter le serveur. Réessayez plus tard."
+        : err.message;
+      errorEl.style.display = 'block';
+    });
+});
+
 // --- TABS ---
 
 document.querySelectorAll('.admin-tab').forEach(tab => {

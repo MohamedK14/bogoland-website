@@ -41,6 +41,7 @@
         <button class="admin-tab" data-tab="products" type="button">Produits</button>
         <button class="admin-tab" data-tab="customers" type="button">Clients</button>
         <button class="admin-tab" data-tab="reviews" type="button">Avis</button>
+        <button class="admin-tab" data-tab="account" type="button">Mon compte</button>
       </div>
       <button id="admin-logout" class="admin-btn admin-btn-text" type="button">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3M15 16l4-4m0 0-4-4m4 4H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -82,6 +83,21 @@
       <p class="admin-hint">Approuvez les avis à publier sur le site, ou supprimez ceux que vous ne voulez pas garder.</p>
       <div id="admin-reviews-list"></div>
       <p id="admin-reviews-error" class="cart-note" style="display:none; color:var(--clay);"></p>
+    </div>
+
+    <div id="admin-tab-account" class="admin-panel" style="display:none;">
+      <p class="admin-hint">Changez votre e-mail et/ou votre mot de passe de connexion à cet espace admin.</p>
+      <form id="account-form" class="contact-form" style="max-width:420px;">
+        <input type="password" id="account-current-password" placeholder="Mot de passe actuel" required>
+        <input type="email" id="account-new-email" placeholder="Nouvel e-mail (laisser vide pour ne pas changer)">
+        <input type="password" id="account-new-password" placeholder="Nouveau mot de passe (laisser vide pour ne pas changer)" minlength="6">
+        <button type="submit" class="admin-btn admin-btn-primary" style="align-self:flex-start;">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Enregistrer
+        </button>
+        <p id="account-form-error" class="cart-note" style="display:none; color:var(--clay);"></p>
+        <p id="account-form-success" class="cart-note" style="display:none;">Vos identifiants ont été mis à jour.</p>
+      </form>
     </div>
   </div>
 
