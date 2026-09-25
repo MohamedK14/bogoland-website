@@ -301,7 +301,7 @@ nav a.active::after{ width:100%; }
 /* ADMIN */
 .admin-title{ font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(var(--ink-rgb),0.5); }
 .admin-section{ padding:70px 0; max-width:720px; margin:0 auto; }
-.admin-dashboard-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.admin-dashboard-head{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:8px; }
 .admin-dashboard-head h2{ font-size:28px; }
 .admin-hint{ font-size:13px; color:rgba(var(--ink-rgb),0.6); margin-bottom:24px; }
 .admin-row{ display:flex; align-items:center; justify-content:space-between; gap:16px;
@@ -320,7 +320,7 @@ nav a.active::after{ width:100%; }
 .admin-switch input:checked + .slider{ background:var(--clay); }
 .admin-switch input:checked + .slider::before{ transform:translateX(20px); }
 
-.admin-tabs{ display:flex; gap:8px; }
+.admin-tabs{ display:flex; flex-wrap:wrap; gap:8px; }
 .admin-tab{ background:none; border:1px solid var(--line); padding:9px 20px; border-radius:20px;
   font-family:'Jost'; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;
   color:rgba(var(--ink-rgb),0.6); transition:background .2s ease, color .2s ease, border-color .2s ease, transform .15s ease; }
@@ -519,4 +519,5 @@ footer li{ margin-bottom:10px; font-size:13px; color:rgba(247,241,230,0.75); }
   .valeurs{ padding:55px 0; }
   .instagram{ padding:40px 20px 65px; }
   footer{ padding-top:45px; }
+  .admin-tab{ padding:8px 14px; }
 }
